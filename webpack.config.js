@@ -14,6 +14,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({title: 'LDS Music Player', template: 'src/index.html'})
+    new HtmlWebpackPlugin({
+      title: 'LDS Music Player',
+      template: 'src/index.html',
+      favicon: 'extension/icon.png'
+    })
   ]
 };
