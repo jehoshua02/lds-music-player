@@ -1,18 +1,33 @@
 var React = require('react');
-var songs = {
-  hymns: require('../data/Hymns-EN/269/Collection').items,
-  childrens: require('../data/Childrens-EN/275/Collection').items
-};
-
-console.log(songs);
+var songs = require('../modules/songs');
 
 var App = React.createClass({
+  getInitialState: function () {
+    return {
+      search: ''
+    };
+  },
   render: function () {
     return (
       <div>
-        <h1>Hello</h1>
+        <input type="text" placeholder="Search" onChange={this._handleSearchChange} autoFocus />
+        <ul>
+          {songs.search(this.state.search).map(function (result, key) {
+            return (
+              <li key={key}>{JSON.stringify({
+                id: result.item.id,
+                number: result.item.number,
+                name: result.item.name,
+                score: result.score
+              })}</li>
+            );
+          })}
+        </ul>
       </div>
     );
+  },
+  _handleSearchChange: function (e) {
+    this.setState({search: e.target.value});
   }
 });
 

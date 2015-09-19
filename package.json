@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "axios": "^0.5.4",
+    "fuse.js": "^1.2.2",
     "react": "^0.13.3"
   }
 }
