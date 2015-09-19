@@ -25346,7 +25346,8 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      search: ''
+	      search: '',
+	      song: null
 	    };
 	  },
 	  render: function render() {
@@ -25357,10 +25358,10 @@
 	      React.createElement(
 	        'ul',
 	        null,
-	        songs.search(this.state.search).map(function (result, key) {
+	        songs.search(this.state.search).map((function (result, key) {
 	          return React.createElement(
 	            'li',
-	            { key: key },
+	            { key: key, onClick: this._handleSearchResultClick.bind(this, result.item) },
 	            JSON.stringify({
 	              id: result.item.id,
 	              number: result.item.number,
@@ -25368,12 +25369,15 @@
 	              score: result.score
 	            })
 	          );
-	        })
+	        }).bind(this))
 	      )
 	    );
 	  },
 	  _handleSearchChange: function _handleSearchChange(e) {
 	    this.setState({ search: e.target.value });
+	  },
+	  _handleSearchResultClick: function _handleSearchResultClick(song) {
+	    this.setState({ song: song });
 	  }
 	});
 	
