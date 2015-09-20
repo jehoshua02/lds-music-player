@@ -9,4 +9,4 @@ var fuse = new Fuse(songs, {
   includeScore: true
 });
 
-module.exports = fuse;
+module.exports.search = fuse.search.bind(fuse);

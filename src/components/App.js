@@ -1,37 +1,46 @@
 var React = require('react');
+var SearchSelect = require('./SearchSelect');
 var songs = require('../modules/songs');
 
 var App = React.createClass({
   getInitialState: function () {
     return {
-      search: '',
       song: null
     };
   },
   render: function () {
     return (
       <div>
-        <input type="text" placeholder="Search" onChange={this._handleSearchChange} autoFocus />
-        <ul>
-          {songs.search(this.state.search).map(function (result, key) {
-            return (
-              <li key={key} onClick={this._handleSearchResultClick.bind(this, result.item)}>{JSON.stringify({
-                id: result.item.id,
-                number: result.item.number,
-                name: result.item.name,
-                score: result.score
-              })}</li>
-            );
-          }.bind(this))}
-        </ul>
+        <SearchSelect
+          search={this._searchSongs}
+          renderResult={this._renderSearchResult}
+          onSelect={this._handleSearchSelect}
+        />
+        {this.state.song !== null && (
+          <pre>{JSON.stringify(this.state.song, null, 2)}</pre>
+        )}
       </div>
     );
   },
-  _handleSearchChange: function (e) {
-    this.setState({search: e.target.value});
+  _renderSearchResult: function (result) {
+    var song = result.item;
+    return (
+      <pre>{JSON.stringify({
+        id: song.id,
+        number: song.number,
+        name: song.name,
+        firstLine: song.firstLine,
+        score: result.score
+      }, null, 2)}</pre>
+    );
   },
-  _handleSearchResultClick: function (song) {
-    this.setState({song: song});
+  _searchSongs: function (value) {
+    return songs.search(value).filter(function (result) {
+      return result.score < 0.5;
+    });
+  },
+  _handleSearchSelect: function (result) {
+    this.setState({song: result.item});
   }
 });
 
