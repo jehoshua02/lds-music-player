@@ -25339,8 +25339,8 @@
 	'use strict';
 	
 	var React = __webpack_require__(185);
-	var SearchSelect = __webpack_require__(345);
-	var songs = __webpack_require__(341);
+	var SearchSelect = __webpack_require__(341);
+	var songs = __webpack_require__(342);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -25398,11 +25398,63 @@
 
 	'use strict';
 	
-	var Fuse = __webpack_require__(342);
+	var React = __webpack_require__(185);
+	var T = React.PropTypes;
+	
+	var SearchSelect = React.createClass({
+	  displayName: 'SearchSelect',
+	
+	  propTypes: {
+	    search: T.func.isRequired,
+	    renderResult: T.func.isRequired,
+	    onSelect: T.func.isRequired
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      value: ''
+	    };
+	  },
+	  render: function render() {
+	    var results = this.props.search(this.state.value);
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement('input', { type: 'text', placeholder: 'Search', onChange: this._handleChange }),
+	      results.length > 0 && React.createElement(
+	        'ul',
+	        null,
+	        results.map((function (result, key) {
+	          return React.createElement(
+	            'li',
+	            { key: key, onClick: this._handleSelect.bind(this, result) },
+	            this.props.renderResult(result)
+	          );
+	        }).bind(this))
+	      )
+	    );
+	  },
+	  _handleChange: function _handleChange(e) {
+	    this.setState({ value: e.target.value });
+	  },
+	  _handleSelect: function _handleSelect(result) {
+	    this.setState(this.getInitialState());
+	    this.props.onSelect(result);
+	  }
+	});
+	
+	module.exports = SearchSelect;
+
+/***/ },
+/* 342 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Fuse = __webpack_require__(343);
 	
 	var songs = [];
-	songs = songs.concat(__webpack_require__(343).items);
 	songs = songs.concat(__webpack_require__(344).items);
+	songs = songs.concat(__webpack_require__(345).items);
 	
 	var fuse = new Fuse(songs, {
 	  keys: ['name', 'number', 'firstLine'],
@@ -25412,7 +25464,7 @@
 	module.exports.search = fuse.search.bind(fuse);
 
 /***/ },
-/* 342 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25889,7 +25941,7 @@
 	})(this);
 
 /***/ },
-/* 343 */
+/* 344 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -64734,7 +64786,7 @@
 	};
 
 /***/ },
-/* 344 */
+/* 345 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -90108,58 +90160,6 @@
 		"type": 0,
 		"uri": "/manual/childrens-songbook"
 	};
-
-/***/ },
-/* 345 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(185);
-	var T = React.PropTypes;
-	
-	var SearchSelect = React.createClass({
-	  displayName: 'SearchSelect',
-	
-	  propTypes: {
-	    search: T.func.isRequired,
-	    renderResult: T.func.isRequired,
-	    onSelect: T.func.isRequired
-	  },
-	  getInitialState: function getInitialState() {
-	    return {
-	      value: ''
-	    };
-	  },
-	  render: function render() {
-	    var results = this.props.search(this.state.value);
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement('input', { type: 'text', placeholder: 'Search', onChange: this._handleChange }),
-	      results.length > 0 && React.createElement(
-	        'ul',
-	        null,
-	        results.map((function (result, key) {
-	          return React.createElement(
-	            'li',
-	            { key: key, onClick: this._handleSelect.bind(this, result) },
-	            this.props.renderResult(result)
-	          );
-	        }).bind(this))
-	      )
-	    );
-	  },
-	  _handleChange: function _handleChange(e) {
-	    this.setState({ value: e.target.value });
-	  },
-	  _handleSelect: function _handleSelect(result) {
-	    this.setState(this.getInitialState());
-	    this.props.onSelect(result);
-	  }
-	});
-	
-	module.exports = SearchSelect;
 
 /***/ }
 /******/ ]);

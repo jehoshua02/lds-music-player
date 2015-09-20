@@ -6,7 +6,8 @@
   "scripts": {
     "init": "npm install",
     "build": "npm run init; webpack",
-    "watch": "npm run init; webpack -w"
+    "watch": "npm run init; webpack -w",
+    "deploy": "npm run build; gh-pages -d ./build"
   },
   "author": "Joshua Stoutenburg <jehoshua02@gmail.com>",
   "license": "ISC",
@@ -24,6 +25,7 @@
     "babel-loader": "^5.3.2",
     "browser-sync": "^2.9.3",
     "browser-sync-webpack-plugin": "^1.0.0",
+    "gh-pages": "^0.4.0",
     "html-webpack-plugin": "^1.6.1",
     "json-loader": "^0.5.3",
     "webpack": "^1.12.1",
