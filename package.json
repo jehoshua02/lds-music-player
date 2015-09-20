@@ -12,12 +12,12 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jehoshua02/chrome-extension-lds-music-player.git"
+    "url": "git+https://github.com/jehoshua02/lds-music-player.git"
   },
   "bugs": {
-    "url": "https://github.com/jehoshua02/chrome-extension-lds-music-player/issues"
+    "url": "https://github.com/jehoshua02/lds-music-player/issues"
   },
-  "homepage": "https://github.com/jehoshua02/chrome-extension-lds-music-player#readme",
+  "homepage": "https://github.com/jehoshua02/lds-music-player#readme",
   "devDependencies": {
     "babel": "^5.8.23",
     "babel-core": "^5.8.24",

@@ -1,4 +1,4 @@
-# Chrome Extension LDS Music Player
+# LDS Music Player
 
 Music player optimized for family routine.
 
