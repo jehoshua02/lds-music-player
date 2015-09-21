@@ -7,7 +7,8 @@ var App = React.createClass({
     return {
       song: songs.random(),
       vocals: true,
-      continuous: false
+      continuous: false,
+      autoPlay: false
     };
   },
   render: function () {
@@ -24,6 +25,9 @@ var App = React.createClass({
           <input type="checkbox" checked={this.state.vocals} onChange={this._handleVocalsToggle} /> Vocals
         </label>
         <label>
+          <input type="checkbox" checked={this.state.autoPlay} onChange={this._handleAutoPlayToggle} /> AutoPlay
+        </label>
+        <label>
           <input type="checkbox" checked={this.state.continuous} onChange={this._handleContinuousToggle} /> Continuous
         </label>
         {this.state.song !== null && (
@@ -32,7 +36,7 @@ var App = React.createClass({
               ref="audio"
               src={this.state.song.counterparts[mp3Key].url}
               controls
-              autoPlay
+              autoPlay={this.state.autoPlay}
             />
             <iframe src={this.state.song.counterparts.singlePDF.url} />
             <pre>{JSON.stringify(this.state.song, null, 2)}</pre>
@@ -82,6 +86,9 @@ var App = React.createClass({
   },
   _handleContinuousToggle: function () {
     this.setState({continuous: !this.state.continuous});
+  },
+  _handleAutoPlayToggle: function () {
+    this.setState({autoPlay: !this.state.autoPlay});
   },
   _handleRandomSong: function () {
     this.setState({song: songs.random()});

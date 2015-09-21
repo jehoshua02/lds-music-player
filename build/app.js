@@ -25349,7 +25349,8 @@
 	    return {
 	      song: songs.random(),
 	      vocals: true,
-	      continuous: false
+	      continuous: false,
+	      autoPlay: false
 	    };
 	  },
 	  render: function render() {
@@ -25376,6 +25377,12 @@
 	      React.createElement(
 	        'label',
 	        null,
+	        React.createElement('input', { type: 'checkbox', checked: this.state.autoPlay, onChange: this._handleAutoPlayToggle }),
+	        ' AutoPlay'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
 	        React.createElement('input', { type: 'checkbox', checked: this.state.continuous, onChange: this._handleContinuousToggle }),
 	        ' Continuous'
 	      ),
@@ -25386,7 +25393,7 @@
 	          ref: 'audio',
 	          src: this.state.song.counterparts[mp3Key].url,
 	          controls: true,
-	          autoPlay: true
+	          autoPlay: this.state.autoPlay
 	        }),
 	        React.createElement('iframe', { src: this.state.song.counterparts.singlePDF.url }),
 	        React.createElement(
@@ -25444,6 +25451,9 @@
 	  },
 	  _handleContinuousToggle: function _handleContinuousToggle() {
 	    this.setState({ continuous: !this.state.continuous });
+	  },
+	  _handleAutoPlayToggle: function _handleAutoPlayToggle() {
+	    this.setState({ autoPlay: !this.state.autoPlay });
 	  },
 	  _handleRandomSong: function _handleRandomSong() {
 	    this.setState({ song: songs.random() });
