@@ -25347,10 +25347,14 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      song: null
+	      song: songs.random(),
+	      vocals: true,
+	      continuous: false,
+	      autoPlay: false
 	    };
 	  },
 	  render: function render() {
+	    var mp3Key = this.state.vocals ? 'vocalMP3' : 'instrumentalMP3';
 	    return React.createElement(
 	      'div',
 	      null,
@@ -25359,12 +25363,52 @@
 	        renderResult: this._renderSearchResult,
 	        onSelect: this._handleSearchSelect
 	      }),
-	      this.state.song !== null && React.createElement(
-	        'pre',
+	      React.createElement(
+	        'button',
+	        { onClick: this._handleRandomSong },
+	        'Random'
+	      ),
+	      React.createElement(
+	        'label',
 	        null,
-	        JSON.stringify(this.state.song, null, 2)
+	        React.createElement('input', { type: 'checkbox', checked: this.state.vocals, onChange: this._handleVocalsToggle }),
+	        ' Vocals'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', { type: 'checkbox', checked: this.state.autoPlay, onChange: this._handleAutoPlayToggle }),
+	        ' AutoPlay'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', { type: 'checkbox', checked: this.state.continuous, onChange: this._handleContinuousToggle }),
+	        ' Continuous'
+	      ),
+	      this.state.song !== null && React.createElement(
+	        'div',
+	        null,
+	        React.createElement('audio', {
+	          ref: 'audio',
+	          src: this.state.song.counterparts[mp3Key].url,
+	          controls: true,
+	          autoPlay: this.state.autoPlay
+	        }),
+	        React.createElement('iframe', { src: this.state.song.counterparts.singlePDF.url }),
+	        React.createElement(
+	          'pre',
+	          null,
+	          JSON.stringify(this.state.song, null, 2)
+	        )
 	      )
 	    );
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.refs.audio.getDOMNode().addEventListener('ended', this._handleEnded);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.refs.audio.getDOMNode().removeEventListener('ended', this._handleEnded);
 	  },
 	  _renderSearchResult: function _renderSearchResult(result) {
 	    var song = result.item;
@@ -25387,6 +25431,35 @@
 	  },
 	  _handleSearchSelect: function _handleSearchSelect(result) {
 	    this.setState({ song: result.item });
+	  },
+	  _handleVocalsToggle: function _handleVocalsToggle() {
+	    if (!this.refs.audio) {
+	      this.setState({ vocals: !this.state.vocals });
+	    } else {
+	      var audio = this.refs.audio.getDOMNode();
+	      var currentTime = audio.currentTime;
+	      var paused = audio.paused;
+	      this.setState({ vocals: !this.state.vocals }, function () {
+	        audio.currentTime = currentTime;
+	        if (paused) {
+	          audio.pause();
+	        } else {
+	          audio.play();
+	        }
+	      });
+	    }
+	  },
+	  _handleContinuousToggle: function _handleContinuousToggle() {
+	    this.setState({ continuous: !this.state.continuous });
+	  },
+	  _handleAutoPlayToggle: function _handleAutoPlayToggle() {
+	    this.setState({ autoPlay: !this.state.autoPlay });
+	  },
+	  _handleRandomSong: function _handleRandomSong() {
+	    this.setState({ song: songs.random() });
+	  },
+	  _handleEnded: function _handleEnded() {
+	    this._handleRandomSong();
 	  }
 	});
 	
@@ -25417,7 +25490,7 @@
 	  render: function render() {
 	    var results = this.props.search(this.state.value);
 	    return React.createElement(
-	      'div',
+	      'span',
 	      null,
 	      React.createElement('input', { type: 'text', placeholder: 'Search', onChange: this._handleChange }),
 	      results.length > 0 && React.createElement(
@@ -25451,17 +25524,24 @@
 	'use strict';
 	
 	var Fuse = __webpack_require__(343);
+	var randomInt = __webpack_require__(344);
 	
 	var songs = [];
-	songs = songs.concat(__webpack_require__(344).items);
 	songs = songs.concat(__webpack_require__(345).items);
+	songs = songs.concat(__webpack_require__(346).items);
 	
 	var fuse = new Fuse(songs, {
 	  keys: ['name', 'number', 'firstLine'],
 	  includeScore: true
 	});
 	
-	module.exports.search = fuse.search.bind(fuse);
+	module.exports.search = function (value) {
+	  return fuse.search(value);
+	};
+	
+	module.exports.random = function () {
+	  return songs[randomInt(0, songs.length - 1)];
+	};
 
 /***/ },
 /* 343 */
@@ -25942,6 +26022,25 @@
 
 /***/ },
 /* 344 */
+/***/ function(module, exports) {
+
+	'use strict';
+	module.exports = function (min, max) {
+		if (max === undefined) {
+			max = min;
+			min = 0;
+		}
+	
+		if (typeof min !== 'number' || typeof max !== 'number') {
+			throw new TypeError('Expected all arguments to be numbers');
+		}
+	
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	};
+
+
+/***/ },
+/* 345 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -64786,7 +64885,7 @@
 	};
 
 /***/ },
-/* 345 */
+/* 346 */
 /***/ function(module, exports) {
 
 	module.exports = {
