@@ -25347,8 +25347,9 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      song: null,
-	      vocals: true
+	      song: songs.random(),
+	      vocals: true,
+	      continuous: false
 	    };
 	  },
 	  render: function render() {
@@ -25372,6 +25373,12 @@
 	        React.createElement('input', { type: 'checkbox', checked: this.state.vocals, onChange: this._handleVocalsToggle }),
 	        ' Vocals'
 	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', { type: 'checkbox', checked: this.state.continuous, onChange: this._handleContinuousToggle }),
+	        ' Continuous'
+	      ),
 	      this.state.song !== null && React.createElement(
 	        'div',
 	        null,
@@ -25389,6 +25396,12 @@
 	        )
 	      )
 	    );
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.refs.audio.getDOMNode().addEventListener('ended', this._handleEnded);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.refs.audio.getDOMNode().removeEventListener('ended', this._handleEnded);
 	  },
 	  _renderSearchResult: function _renderSearchResult(result) {
 	    var song = result.item;
@@ -25429,8 +25442,14 @@
 	      });
 	    }
 	  },
+	  _handleContinuousToggle: function _handleContinuousToggle() {
+	    this.setState({ continuous: !this.state.continuous });
+	  },
 	  _handleRandomSong: function _handleRandomSong() {
 	    this.setState({ song: songs.random() });
+	  },
+	  _handleEnded: function _handleEnded() {
+	    this._handleRandomSong();
 	  }
 	});
 	

@@ -5,8 +5,9 @@ var songs = require('../modules/songs');
 var App = React.createClass({
   getInitialState: function () {
     return {
-      song: null,
-      vocals: true
+      song: songs.random(),
+      vocals: true,
+      continuous: false
     };
   },
   render: function () {
@@ -22,6 +23,9 @@ var App = React.createClass({
         <label>
           <input type="checkbox" checked={this.state.vocals} onChange={this._handleVocalsToggle} /> Vocals
         </label>
+        <label>
+          <input type="checkbox" checked={this.state.continuous} onChange={this._handleContinuousToggle} /> Continuous
+        </label>
         {this.state.song !== null && (
           <div>
             <audio
@@ -36,6 +40,12 @@ var App = React.createClass({
         )}
       </div>
     );
+  },
+  componentDidMount: function () {
+    this.refs.audio.getDOMNode().addEventListener('ended', this._handleEnded);
+  },
+  componentWillUnmount: function () {
+    this.refs.audio.getDOMNode().removeEventListener('ended', this._handleEnded);
   },
   _renderSearchResult: function (result) {
     var song = result.item;
@@ -70,8 +80,14 @@ var App = React.createClass({
       });
     }
   },
+  _handleContinuousToggle: function () {
+    this.setState({continuous: !this.state.continuous});
+  },
   _handleRandomSong: function () {
     this.setState({song: songs.random()});
+  },
+  _handleEnded: function () {
+    this._handleRandomSong();
   }
 });
 
