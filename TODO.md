@@ -1,6 +1,7 @@
-+ Continuous
 + Style with Radium
 + Link scriptures
-+ Search verses
-+ Filter on collection
++ Guard against data inconsistencies
 + Filter on Topic
++ Filter on collection
++ Search verses
++ Continuous sequential
