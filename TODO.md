@@ -1,8 +1,7 @@
-+ score name, number
-+ score first line / verses
-+ collection filter
-+ topic filter
-+ link scriptures
-+ pdf iframe
-+ vocals / instrumental
-+ audio tag
++ Random
++ Continuous
++ Style with Radium
++ Link scriptures
++ Search verses
++ Filter on collection
++ Filter on Topic
