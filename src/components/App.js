@@ -17,7 +17,10 @@ var App = React.createClass({
           onSelect={this._handleSearchSelect}
         />
         {this.state.song !== null && (
-          <pre>{JSON.stringify(this.state.song, null, 2)}</pre>
+          <div>
+            <iframe src={this.state.song.counterparts.singlePDF.url} />
+            <pre>{JSON.stringify(this.state.song, null, 2)}</pre>
+          </div>
         )}
       </div>
     );

@@ -25340,7 +25340,7 @@
 	
 	var React = __webpack_require__(185);
 	var SearchSelect = __webpack_require__(341);
-	var songs = __webpack_require__(342);
+	var songs = __webpack_require__(343);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -25360,9 +25360,14 @@
 	        onSelect: this._handleSearchSelect
 	      }),
 	      this.state.song !== null && React.createElement(
-	        'pre',
+	        'div',
 	        null,
-	        JSON.stringify(this.state.song, null, 2)
+	        React.createElement('iframe', { src: this.state.song.counterparts.singlePDF.url }),
+	        React.createElement(
+	          'pre',
+	          null,
+	          JSON.stringify(this.state.song, null, 2)
+	        )
 	      )
 	    );
 	  },
@@ -25445,16 +25450,17 @@
 	module.exports = SearchSelect;
 
 /***/ },
-/* 342 */
+/* 342 */,
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Fuse = __webpack_require__(343);
+	var Fuse = __webpack_require__(344);
 	
 	var songs = [];
-	songs = songs.concat(__webpack_require__(344).items);
 	songs = songs.concat(__webpack_require__(345).items);
+	songs = songs.concat(__webpack_require__(346).items);
 	
 	var fuse = new Fuse(songs, {
 	  keys: ['name', 'number', 'firstLine'],
@@ -25464,7 +25470,7 @@
 	module.exports.search = fuse.search.bind(fuse);
 
 /***/ },
-/* 343 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25941,7 +25947,7 @@
 	})(this);
 
 /***/ },
-/* 344 */
+/* 345 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -64786,7 +64792,7 @@
 	};
 
 /***/ },
-/* 345 */
+/* 346 */
 /***/ function(module, exports) {
 
 	module.exports = {
