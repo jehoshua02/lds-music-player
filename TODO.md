@@ -1,4 +1,3 @@
-+ Random
 + Continuous
 + Style with Radium
 + Link scriptures

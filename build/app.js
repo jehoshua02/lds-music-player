@@ -25362,6 +25362,11 @@
 	        onSelect: this._handleSearchSelect
 	      }),
 	      React.createElement(
+	        'button',
+	        { onClick: this._handleRandomSong },
+	        'Random'
+	      ),
+	      React.createElement(
 	        'label',
 	        null,
 	        React.createElement('input', { type: 'checkbox', checked: this.state.vocals, onChange: this._handleVocalsToggle }),
@@ -25423,6 +25428,9 @@
 	        }
 	      });
 	    }
+	  },
+	  _handleRandomSong: function _handleRandomSong() {
+	    this.setState({ song: songs.random() });
 	  }
 	});
 	
@@ -25488,6 +25496,7 @@
 	'use strict';
 	
 	var Fuse = __webpack_require__(344);
+	var randomInt = __webpack_require__(349);
 	
 	var songs = [];
 	songs = songs.concat(__webpack_require__(345).items);
@@ -25498,7 +25507,13 @@
 	  includeScore: true
 	});
 	
-	module.exports.search = fuse.search.bind(fuse);
+	module.exports.search = function (value) {
+	  return fuse.search(value);
+	};
+	
+	module.exports.random = function () {
+	  return songs[randomInt(0, songs.length - 1)];
+	};
 
 /***/ },
 /* 344 */
@@ -90197,6 +90212,27 @@
 		"type": 0,
 		"uri": "/manual/childrens-songbook"
 	};
+
+/***/ },
+/* 347 */,
+/* 348 */,
+/* 349 */
+/***/ function(module, exports) {
+
+	'use strict';
+	module.exports = function (min, max) {
+		if (max === undefined) {
+			max = min;
+			min = 0;
+		}
+	
+		if (typeof min !== 'number' || typeof max !== 'number') {
+			throw new TypeError('Expected all arguments to be numbers');
+		}
+	
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	};
+
 
 /***/ }
 /******/ ]);

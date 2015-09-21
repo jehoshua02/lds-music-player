@@ -18,6 +18,7 @@ var App = React.createClass({
           renderResult={this._renderSearchResult}
           onSelect={this._handleSearchSelect}
         />
+        <button onClick={this._handleRandomSong}>Random</button>
         <label>
           <input type="checkbox" checked={this.state.vocals} onChange={this._handleVocalsToggle} /> Vocals
         </label>
@@ -68,6 +69,9 @@ var App = React.createClass({
         if (paused) { audio.pause(); } else { audio.play(); }
       });
     }
+  },
+  _handleRandomSong: function () {
+    this.setState({song: songs.random()});
   }
 });
 
