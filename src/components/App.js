@@ -10,6 +10,7 @@ var App = React.createClass({
     };
   },
   render: function () {
+    var mp3Key = this.state.vocals ? 'vocalMP3' : 'instrumentalMP3';
     return (
       <div>
         <SearchSelect
@@ -24,7 +25,7 @@ var App = React.createClass({
           <div>
             <audio
               ref="audio"
-              src={this.state.vocals ? this.state.song.counterparts.vocalMP3.url : this.state.song.counterparts.instrumentalMP3.url}
+              src={this.state.song.counterparts[mp3Key].url}
               controls
               autoPlay
             />
@@ -64,13 +65,7 @@ var App = React.createClass({
       var paused = audio.paused;
       this.setState({vocals: !this.state.vocals}, function () {
         audio.currentTime = currentTime;
-        setTimeout(function () {
-          if (paused) {
-            audio.pause();
-          } else {
-            audio.play();
-          }
-        }, 0);
+        if (paused) { audio.pause(); } else { audio.play(); }
       });
     }
   }
