@@ -5,7 +5,8 @@ var songs = require('../modules/songs');
 var App = React.createClass({
   getInitialState: function () {
     return {
-      song: null
+      song: null,
+      vocals: true
     };
   },
   render: function () {
@@ -16,8 +17,17 @@ var App = React.createClass({
           renderResult={this._renderSearchResult}
           onSelect={this._handleSearchSelect}
         />
+        <label>
+          <input type="checkbox" checked={this.state.vocals} onChange={this._handleVocalsToggle} /> Vocals
+        </label>
         {this.state.song !== null && (
           <div>
+            <audio
+              ref="audio"
+              src={this.state.vocals ? this.state.song.counterparts.vocalMP3.url : this.state.song.counterparts.instrumentalMP3.url}
+              controls
+              autoPlay
+            />
             <iframe src={this.state.song.counterparts.singlePDF.url} />
             <pre>{JSON.stringify(this.state.song, null, 2)}</pre>
           </div>
@@ -44,6 +54,17 @@ var App = React.createClass({
   },
   _handleSearchSelect: function (result) {
     this.setState({song: result.item});
+  },
+  _handleVocalsToggle: function () {
+    if (this.refs.audio) {
+      var audio = this.refs.audio.getDOMNode();
+      var currentTime = audio.currentTime;
+      this.setState({vocals: !this.state.vocals}, function () {
+        audio.currentTime = currentTime;
+      });
+    } else {
+      this.setState({vocals: !this.state.vocals});
+    }
   }
 });
 

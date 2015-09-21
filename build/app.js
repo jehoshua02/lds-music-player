@@ -25347,7 +25347,8 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      song: null
+	      song: null,
+	      vocals: true
 	    };
 	  },
 	  render: function render() {
@@ -25359,9 +25360,21 @@
 	        renderResult: this._renderSearchResult,
 	        onSelect: this._handleSearchSelect
 	      }),
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', { type: 'checkbox', checked: this.state.vocals, onChange: this._handleVocalsToggle }),
+	        ' Vocals'
+	      ),
 	      this.state.song !== null && React.createElement(
 	        'div',
 	        null,
+	        React.createElement('audio', {
+	          ref: 'audio',
+	          src: this.state.vocals ? this.state.song.counterparts.vocalMP3.url : this.state.song.counterparts.instrumentalMP3.url,
+	          controls: true,
+	          autoPlay: true
+	        }),
 	        React.createElement('iframe', { src: this.state.song.counterparts.singlePDF.url }),
 	        React.createElement(
 	          'pre',
@@ -25392,6 +25405,17 @@
 	  },
 	  _handleSearchSelect: function _handleSearchSelect(result) {
 	    this.setState({ song: result.item });
+	  },
+	  _handleVocalsToggle: function _handleVocalsToggle() {
+	    if (this.refs.audio) {
+	      var audio = this.refs.audio.getDOMNode();
+	      var currentTime = audio.currentTime;
+	      this.setState({ vocals: !this.state.vocals }, function () {
+	        audio.currentTime = currentTime;
+	      });
+	    } else {
+	      this.setState({ vocals: !this.state.vocals });
+	    }
 	  }
 	});
 	
