@@ -25407,14 +25407,22 @@
 	    this.setState({ song: result.item });
 	  },
 	  _handleVocalsToggle: function _handleVocalsToggle() {
-	    if (this.refs.audio) {
+	    if (!this.refs.audio) {
+	      this.setState({ vocals: !this.state.vocals });
+	    } else {
 	      var audio = this.refs.audio.getDOMNode();
 	      var currentTime = audio.currentTime;
+	      var paused = audio.paused;
 	      this.setState({ vocals: !this.state.vocals }, function () {
 	        audio.currentTime = currentTime;
+	        setTimeout(function () {
+	          if (paused) {
+	            audio.pause();
+	          } else {
+	            audio.play();
+	          }
+	        }, 0);
 	      });
-	    } else {
-	      this.setState({ vocals: !this.state.vocals });
 	    }
 	  }
 	});
