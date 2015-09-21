@@ -15,7 +15,7 @@ var SearchSelect = React.createClass({
   render: function () {
     var results = this.props.search(this.state.value);
     return (
-      <div>
+      <span>
         <input type="text" placeholder="Search" onChange={this._handleChange} />
         {results.length > 0 && (
           <ul>
@@ -26,7 +26,7 @@ var SearchSelect = React.createClass({
             }.bind(this))}
           </ul>
         )}
-      </div>
+      </span>
     );
   },
   _handleChange: function (e) {

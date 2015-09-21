@@ -25453,7 +25453,7 @@
 	  render: function render() {
 	    var results = this.props.search(this.state.value);
 	    return React.createElement(
-	      'div',
+	      'span',
 	      null,
 	      React.createElement('input', { type: 'text', placeholder: 'Search', onChange: this._handleChange }),
 	      results.length > 0 && React.createElement(
