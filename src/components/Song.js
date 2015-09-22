@@ -24,15 +24,17 @@ var Song = React.createClass({
           autoPlay={this.props.autoPlay}
         />
         <iframe src={song.counterparts.singlePDF.url} />
-        <ul>
-          {song.scriptures.map(function (scripture, key) {
-            var href = scriptureUri.toHref(scripture.uri);
-            var text = scriptureUri.toRef(scripture.uri);
-            return (
-              <li key={key}><a href={href} target="_blank">{text}</a></li>
-            );
-          }.bind(this))}
-        </ul>
+        {song.scriptures.length > 0 && (
+          <ul>
+            {song.scriptures.map(function (scripture, key) {
+              var href = scriptureUri.toHref(scripture.uri);
+              var text = scriptureUri.toRef(scripture.uri);
+              return (
+                <li key={key}><a href={href} target="_blank">{text}</a></li>
+              );
+            }.bind(this))}
+          </ul>
+        )}
         <pre>{JSON.stringify(song, null, 2)}</pre>
       </div>
     );

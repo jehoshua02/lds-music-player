@@ -90314,7 +90314,7 @@
 	        autoPlay: this.props.autoPlay
 	      }),
 	      React.createElement('iframe', { src: song.counterparts.singlePDF.url }),
-	      React.createElement(
+	      song.scriptures.length > 0 && React.createElement(
 	        'ul',
 	        null,
 	        song.scriptures.map((function (scripture, key) {
