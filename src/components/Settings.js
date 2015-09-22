@@ -3,9 +3,12 @@ var T = React.PropTypes;
 
 var Settings = React.createClass({
   propTypes: {
-    vocals: T.bool.isRequired,
-    autoPlay: T.bool.isRequired,
-    continuous: T.bool.isRequired
+    settings: T.shape({
+      vocals: T.bool.isRequired,
+      autoPlay: T.bool.isRequired,
+      continuous: T.bool.isRequired
+    }).isRequired,
+    onChange: T.func.isRequired
   },
   render: function () {
     return (

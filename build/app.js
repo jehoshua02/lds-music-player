@@ -90145,9 +90145,12 @@
 	  displayName: 'Settings',
 	
 	  propTypes: {
-	    vocals: T.bool.isRequired,
-	    autoPlay: T.bool.isRequired,
-	    continuous: T.bool.isRequired
+	    settings: T.shape({
+	      vocals: T.bool.isRequired,
+	      autoPlay: T.bool.isRequired,
+	      continuous: T.bool.isRequired
+	    }).isRequired,
+	    onChange: T.func.isRequired
 	  },
 	  render: function render() {
 	    return React.createElement(
