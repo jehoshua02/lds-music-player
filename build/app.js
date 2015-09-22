@@ -48,7 +48,7 @@
 	
 	__webpack_require__(1);
 	var React = __webpack_require__(185);
-	var Player = __webpack_require__(352);
+	var Player = __webpack_require__(340);
 	
 	document.addEventListener('DOMContentLoaded', function () {
 	  React.render(React.createElement(Player, null), document.getElementById('app'));
@@ -25333,7 +25333,68 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(184)))
 
 /***/ },
-/* 340 */,
+/* 340 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(185);
+	var Picker = __webpack_require__(341);
+	var Settings = __webpack_require__(342);
+	var Song = __webpack_require__(343);
+	var Songs = __webpack_require__(344);
+	
+	var Player = React.createClass({
+	  displayName: 'Player',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      song: Songs.random(),
+	      settings: {
+	        vocals: true,
+	        continuous: false,
+	        autoPlay: false
+	      }
+	    };
+	  },
+	  render: function render() {
+	    var song = this.state.song;
+	    var mp3Key = this.state.settings.vocals ? 'vocalMP3' : 'instrumentalMP3';
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Picker, {
+	        onPick: this._handleSongChange
+	      }),
+	      React.createElement(Settings, {
+	        settings: this.state.settings,
+	        onChange: this._handleSettingsChange
+	      }),
+	      React.createElement(Song, {
+	        ref: 'song',
+	        song: this.state.song,
+	        vocals: this.state.settings.vocals,
+	        autoPlay: this.state.settings.autoPlay,
+	        onEnd: this._handleSongEnd
+	      })
+	    );
+	  },
+	  _handleSongChange: function _handleSongChange(song) {
+	    this.setState({ song: song });
+	  },
+	  _handleSongEnd: function _handleSongEnd() {
+	    if (this.state.settings.continuous === true) {
+	      this.setState({ song: Songs.random() });
+	    }
+	  },
+	  _handleSettingsChange: function _handleSettingsChange(settings) {
+	    this.setState({ settings: settings });
+	  }
+	});
+	
+	module.exports = Player;
+
+/***/ },
 /* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -25341,53 +25402,255 @@
 	
 	var React = __webpack_require__(185);
 	var T = React.PropTypes;
+	var SearchSelect = __webpack_require__(350);
+	var Songs = __webpack_require__(344);
 	
-	var SearchSelect = React.createClass({
-	  displayName: 'SearchSelect',
+	var Picker = React.createClass({
+	  displayName: 'Picker',
 	
 	  propTypes: {
-	    search: T.func.isRequired,
-	    renderResult: T.func.isRequired,
-	    onSelect: T.func.isRequired
-	  },
-	  getInitialState: function getInitialState() {
-	    return {
-	      value: ''
-	    };
+	    onPick: T.func.isRequired
 	  },
 	  render: function render() {
-	    var results = this.props.search(this.state.value);
 	    return React.createElement(
 	      'span',
 	      null,
-	      React.createElement('input', { type: 'text', placeholder: 'Search', onChange: this._handleChange }),
-	      results.length > 0 && React.createElement(
-	        'ul',
-	        null,
-	        results.map((function (result, key) {
-	          return React.createElement(
-	            'li',
-	            { key: key, onClick: this._handleSelect.bind(this, result) },
-	            this.props.renderResult(result)
-	          );
-	        }).bind(this))
+	      React.createElement(SearchSelect, {
+	        search: this._searchSongs,
+	        renderResult: this._renderSearchResult,
+	        onSelect: this._handleSearchSelect
+	      }),
+	      React.createElement(
+	        'button',
+	        { onClick: this._handleRandomSong },
+	        'Random'
 	      )
 	    );
 	  },
-	  _handleChange: function _handleChange(e) {
-	    this.setState({ value: e.target.value });
+	  componentDidMount: function componentDidMount() {
+	    this.props.onPick(Songs.random());
 	  },
-	  _handleSelect: function _handleSelect(result) {
-	    this.setState(this.getInitialState());
-	    this.props.onSelect(result);
+	  _searchSongs: function _searchSongs(value) {
+	    return Songs.search(value).filter(function (result) {
+	      return result.score < 0.5;
+	    });
+	  },
+	  _renderSearchResult: function _renderSearchResult(result) {
+	    var song = result.item;
+	    return React.createElement(
+	      'pre',
+	      null,
+	      JSON.stringify({
+	        id: song.id,
+	        number: song.number,
+	        name: song.name,
+	        firstLine: song.firstLine,
+	        score: result.score
+	      }, null, 2)
+	    );
+	  },
+	  _handleSearchSelect: function _handleSearchSelect(result) {
+	    this.props.onPick(result.item);
+	  },
+	  _handleRandomSong: function _handleRandomSong() {
+	    this.props.onPick(Songs.random());
 	  }
 	});
 	
-	module.exports = SearchSelect;
+	module.exports = Picker;
 
 /***/ },
-/* 342 */,
+/* 342 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(185);
+	var T = React.PropTypes;
+	
+	var Settings = React.createClass({
+	  displayName: 'Settings',
+	
+	  propTypes: {
+	    settings: T.shape({
+	      vocals: T.bool.isRequired,
+	      autoPlay: T.bool.isRequired,
+	      continuous: T.bool.isRequired
+	    }).isRequired,
+	    onChange: T.func.isRequired
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          checked: this.props.settings.vocals,
+	          onChange: this._toggle.bind(this, 'vocals')
+	        }),
+	        ' Vocals'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          checked: this.props.settings.autoPlay,
+	          onChange: this._toggle.bind(this, 'autoPlay')
+	        }),
+	        ' AutoPlay'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          checked: this.props.settings.continuous,
+	          onChange: this._toggle.bind(this, 'continuous')
+	        }),
+	        ' Continuous'
+	      )
+	    );
+	  },
+	  _toggle: function _toggle(key) {
+	    var settings = Object.assign({}, this.props.settings);
+	    settings[key] = !settings[key];
+	    this.props.onChange(settings);
+	  }
+	});
+	
+	module.exports = Settings;
+
+/***/ },
 /* 343 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(185);
+	var T = React.PropTypes;
+	var scriptureUri = __webpack_require__(349);
+	
+	var Song = React.createClass({
+	  displayName: 'Song',
+	
+	  propTypes: {
+	    song: T.object.isRequired
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      currentTime: null,
+	      paused: null
+	    };
+	  },
+	  render: function render() {
+	    var song = this.props.song;
+	    var mp3Key = this.props.vocals ? 'vocalMP3' : 'instrumentalMP3';
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement('audio', {
+	        ref: 'audio',
+	        src: song.counterparts[mp3Key].url,
+	        controls: true,
+	        autoPlay: this.props.autoPlay
+	      }),
+	      React.createElement('iframe', { src: song.counterparts.singlePDF.url }),
+	      song.scriptures.length > 0 && React.createElement(
+	        'ul',
+	        null,
+	        song.scriptures.map((function (scripture, key) {
+	          var href = scriptureUri.toHref(scripture.uri);
+	          var text = scriptureUri.toRef(scripture.uri);
+	          return React.createElement(
+	            'li',
+	            { key: key },
+	            React.createElement(
+	              'a',
+	              { href: href, target: '_blank' },
+	              text
+	            )
+	          );
+	        }).bind(this))
+	      ),
+	      React.createElement(
+	        'pre',
+	        null,
+	        JSON.stringify(song, null, 2)
+	      )
+	    );
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this._audioNode().addEventListener('ended', this.props.onEnd);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this._audioNode().removeEventListener('ended', this.props.onEnd);
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    if (nextProps.vocals !== this.props.vocals) {
+	      this._captureAudioState();
+	    }
+	  },
+	  componentDidUpdate: function componentDidUpdate(prevProps) {
+	    if (this.props.vocals !== prevProps.vocals) {
+	      this._applyAudioState();
+	    }
+	  },
+	  _captureAudioState: function _captureAudioState() {
+	    var audio = this._audioNode();
+	    this.setState({
+	      currentTime: audio.currentTime,
+	      paused: audio.paused
+	    });
+	  },
+	  _applyAudioState: function _applyAudioState() {
+	    var audio = this._audioNode();
+	    audio.currentTime = this.state.currentTime;
+	    if (this.state.paused) {
+	      audio.pause();
+	    } else {
+	      audio.play();
+	    }
+	    this.setState(this.getInitialState());
+	  },
+	  _audioNode: function _audioNode() {
+	    return this.refs.audio.getDOMNode();
+	  }
+	});
+	
+	module.exports = Song;
+
+/***/ },
+/* 344 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Fuse = __webpack_require__(345);
+	var randomInt = __webpack_require__(346);
+	
+	var songs = [];
+	songs = songs.concat(__webpack_require__(347).items);
+	songs = songs.concat(__webpack_require__(348).items);
+	
+	var fuse = new Fuse(songs, {
+	  keys: ['name', 'number', 'firstLine'],
+	  includeScore: true
+	});
+	
+	module.exports.search = function (value) {
+	  return fuse.search(value);
+	};
+	
+	module.exports.random = function () {
+	  return songs[randomInt(0, songs.length - 1)];
+	};
+
+/***/ },
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25864,7 +26127,7 @@
 	})(this);
 
 /***/ },
-/* 344 */
+/* 346 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -25883,7 +26146,7 @@
 
 
 /***/ },
-/* 345 */
+/* 347 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -64728,7 +64991,7 @@
 	};
 
 /***/ },
-/* 346 */
+/* 348 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -90104,8 +90367,7 @@
 	};
 
 /***/ },
-/* 347 */,
-/* 348 */
+/* 349 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -90132,7 +90394,6 @@
 	};
 
 /***/ },
-/* 349 */,
 /* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -90141,313 +90402,48 @@
 	var React = __webpack_require__(185);
 	var T = React.PropTypes;
 	
-	var Settings = React.createClass({
-	  displayName: 'Settings',
+	var SearchSelect = React.createClass({
+	  displayName: 'SearchSelect',
 	
 	  propTypes: {
-	    settings: T.shape({
-	      vocals: T.bool.isRequired,
-	      autoPlay: T.bool.isRequired,
-	      continuous: T.bool.isRequired
-	    }).isRequired,
-	    onChange: T.func.isRequired
+	    search: T.func.isRequired,
+	    renderResult: T.func.isRequired,
+	    onSelect: T.func.isRequired
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      value: ''
+	    };
 	  },
 	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'label',
-	        null,
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          checked: this.props.settings.vocals,
-	          onChange: this._toggle.bind(this, 'vocals')
-	        }),
-	        ' Vocals'
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          checked: this.props.settings.autoPlay,
-	          onChange: this._toggle.bind(this, 'autoPlay')
-	        }),
-	        ' AutoPlay'
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          checked: this.props.settings.continuous,
-	          onChange: this._toggle.bind(this, 'continuous')
-	        }),
-	        ' Continuous'
-	      )
-	    );
-	  },
-	  _toggle: function _toggle(key) {
-	    var settings = Object.assign({}, this.props.settings);
-	    settings[key] = !settings[key];
-	    this.props.onChange(settings);
-	  }
-	});
-	
-	module.exports = Settings;
-
-/***/ },
-/* 351 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(185);
-	var T = React.PropTypes;
-	var SearchSelect = __webpack_require__(341);
-	var Songs = __webpack_require__(354);
-	
-	var Picker = React.createClass({
-	  displayName: 'Picker',
-	
-	  propTypes: {
-	    onPick: T.func.isRequired
-	  },
-	  render: function render() {
+	    var results = this.props.search(this.state.value);
 	    return React.createElement(
 	      'span',
 	      null,
-	      React.createElement(SearchSelect, {
-	        search: this._searchSongs,
-	        renderResult: this._renderSearchResult,
-	        onSelect: this._handleSearchSelect
-	      }),
-	      React.createElement(
-	        'button',
-	        { onClick: this._handleRandomSong },
-	        'Random'
-	      )
-	    );
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this.props.onPick(Songs.random());
-	  },
-	  _searchSongs: function _searchSongs(value) {
-	    return Songs.search(value).filter(function (result) {
-	      return result.score < 0.5;
-	    });
-	  },
-	  _renderSearchResult: function _renderSearchResult(result) {
-	    var song = result.item;
-	    return React.createElement(
-	      'pre',
-	      null,
-	      JSON.stringify({
-	        id: song.id,
-	        number: song.number,
-	        name: song.name,
-	        firstLine: song.firstLine,
-	        score: result.score
-	      }, null, 2)
-	    );
-	  },
-	  _handleSearchSelect: function _handleSearchSelect(result) {
-	    this.props.onPick(result.item);
-	  },
-	  _handleRandomSong: function _handleRandomSong() {
-	    this.props.onPick(Songs.random());
-	  }
-	});
-	
-	module.exports = Picker;
-
-/***/ },
-/* 352 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(185);
-	var Picker = __webpack_require__(351);
-	var Settings = __webpack_require__(350);
-	var Song = __webpack_require__(353);
-	var Songs = __webpack_require__(354);
-	
-	var Player = React.createClass({
-	  displayName: 'Player',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      song: Songs.random(),
-	      settings: {
-	        vocals: true,
-	        continuous: false,
-	        autoPlay: false
-	      }
-	    };
-	  },
-	  render: function render() {
-	    var song = this.state.song;
-	    var mp3Key = this.state.settings.vocals ? 'vocalMP3' : 'instrumentalMP3';
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(Picker, {
-	        onPick: this._handleSongChange
-	      }),
-	      React.createElement(Settings, {
-	        settings: this.state.settings,
-	        onChange: this._handleSettingsChange
-	      }),
-	      React.createElement(Song, {
-	        ref: 'song',
-	        song: this.state.song,
-	        vocals: this.state.settings.vocals,
-	        autoPlay: this.state.settings.autoPlay,
-	        onEnd: this._handleSongEnd
-	      })
-	    );
-	  },
-	  _handleSongChange: function _handleSongChange(song) {
-	    this.setState({ song: song });
-	  },
-	  _handleSongEnd: function _handleSongEnd() {
-	    if (this.state.settings.continuous === true) {
-	      this.setState({ song: Songs.random() });
-	    }
-	  },
-	  _handleSettingsChange: function _handleSettingsChange(settings) {
-	    this.setState({ settings: settings });
-	  }
-	});
-	
-	module.exports = Player;
-
-/***/ },
-/* 353 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(185);
-	var T = React.PropTypes;
-	var scriptureUri = __webpack_require__(348);
-	
-	var Song = React.createClass({
-	  displayName: 'Song',
-	
-	  propTypes: {
-	    song: T.object.isRequired
-	  },
-	  getInitialState: function getInitialState() {
-	    return {
-	      currentTime: null,
-	      paused: null
-	    };
-	  },
-	  render: function render() {
-	    var song = this.props.song;
-	    var mp3Key = this.props.vocals ? 'vocalMP3' : 'instrumentalMP3';
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement('audio', {
-	        ref: 'audio',
-	        src: song.counterparts[mp3Key].url,
-	        controls: true,
-	        autoPlay: this.props.autoPlay
-	      }),
-	      React.createElement('iframe', { src: song.counterparts.singlePDF.url }),
-	      song.scriptures.length > 0 && React.createElement(
+	      React.createElement('input', { type: 'text', placeholder: 'Search', onChange: this._handleChange }),
+	      results.length > 0 && React.createElement(
 	        'ul',
 	        null,
-	        song.scriptures.map((function (scripture, key) {
-	          var href = scriptureUri.toHref(scripture.uri);
-	          var text = scriptureUri.toRef(scripture.uri);
+	        results.map((function (result, key) {
 	          return React.createElement(
 	            'li',
-	            { key: key },
-	            React.createElement(
-	              'a',
-	              { href: href, target: '_blank' },
-	              text
-	            )
+	            { key: key, onClick: this._handleSelect.bind(this, result) },
+	            this.props.renderResult(result)
 	          );
 	        }).bind(this))
-	      ),
-	      React.createElement(
-	        'pre',
-	        null,
-	        JSON.stringify(song, null, 2)
 	      )
 	    );
 	  },
-	  componentDidMount: function componentDidMount() {
-	    this._audioNode().addEventListener('ended', this.props.onEnd);
+	  _handleChange: function _handleChange(e) {
+	    this.setState({ value: e.target.value });
 	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    this._audioNode().removeEventListener('ended', this.props.onEnd);
-	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    if (nextProps.vocals !== this.props.vocals) {
-	      this._captureAudioState();
-	    }
-	  },
-	  componentDidUpdate: function componentDidUpdate(prevProps) {
-	    if (this.props.vocals !== prevProps.vocals) {
-	      this._applyAudioState();
-	    }
-	  },
-	  _captureAudioState: function _captureAudioState() {
-	    var audio = this._audioNode();
-	    this.setState({
-	      currentTime: audio.currentTime,
-	      paused: audio.paused
-	    });
-	  },
-	  _applyAudioState: function _applyAudioState() {
-	    var audio = this._audioNode();
-	    audio.currentTime = this.state.currentTime;
-	    if (this.state.paused) {
-	      audio.pause();
-	    } else {
-	      audio.play();
-	    }
+	  _handleSelect: function _handleSelect(result) {
 	    this.setState(this.getInitialState());
-	  },
-	  _audioNode: function _audioNode() {
-	    return this.refs.audio.getDOMNode();
+	    this.props.onSelect(result);
 	  }
 	});
 	
-	module.exports = Song;
-
-/***/ },
-/* 354 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Fuse = __webpack_require__(343);
-	var randomInt = __webpack_require__(344);
-	
-	var songs = [];
-	songs = songs.concat(__webpack_require__(345).items);
-	songs = songs.concat(__webpack_require__(346).items);
-	
-	var fuse = new Fuse(songs, {
-	  keys: ['name', 'number', 'firstLine'],
-	  includeScore: true
-	});
-	
-	module.exports.search = function (value) {
-	  return fuse.search(value);
-	};
-	
-	module.exports.random = function () {
-	  return songs[randomInt(0, songs.length - 1)];
-	};
+	module.exports = SearchSelect;
 
 /***/ }
 /******/ ]);

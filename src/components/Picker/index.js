@@ -1,7 +1,7 @@
 var React = require('react');
 var T = React.PropTypes;
-var SearchSelect = require('./SearchSelect');
-var Songs = require('../modules/Songs');
+var SearchSelect = require('components/SearchSelect');
+var Songs = require('modules/Songs');
 
 var Picker = React.createClass({
   propTypes: {

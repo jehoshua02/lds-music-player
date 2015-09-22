@@ -16,6 +16,9 @@ module.exports = {
       {test: /\.json$/, loader: 'json'}
     ]
   },
+  resolve: {
+    root: path.resolve(__dirname, 'src/')
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'LDS Music Player',

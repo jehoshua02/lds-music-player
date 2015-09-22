@@ -1,6 +1,6 @@
 var React = require('react');
 var T = React.PropTypes;
-var scriptureUri = require('../modules/scriptureUri');
+var scriptureUri = require('modules/scriptureUri');
 
 var Song = React.createClass({
   propTypes: {

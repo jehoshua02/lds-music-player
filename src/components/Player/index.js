@@ -1,8 +1,8 @@
 var React = require('react');
-var Picker = require('./Picker');
-var Settings = require('./Settings');
-var Song = require('./Song');
-var Songs = require('../modules/Songs');
+var Picker = require('components/Picker');
+var Settings = require('components/Settings');
+var Song = require('components/Song');
+var Songs = require('modules/Songs');
 
 var Player = React.createClass({
   getInitialState: function () {
