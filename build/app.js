@@ -90290,8 +90290,13 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(Picker, { onPick: this._handleSongChange }),
-	      React.createElement(Settings, { settings: this.state.settings, onChange: this._handleSettingsChange }),
+	      React.createElement(Picker, {
+	        onPick: this._handleSongChange
+	      }),
+	      React.createElement(Settings, {
+	        settings: this.state.settings,
+	        onChange: this._handleSettingsChange
+	      }),
 	      React.createElement(Song, {
 	        ref: 'song',
 	        song: this.state.song,

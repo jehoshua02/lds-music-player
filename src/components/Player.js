@@ -20,8 +20,13 @@ var Player = React.createClass({
     var mp3Key = this.state.settings.vocals ? 'vocalMP3' : 'instrumentalMP3';
     return (
       <div>
-        <Picker onPick={this._handleSongChange} />
-        <Settings settings={this.state.settings} onChange={this._handleSettingsChange} />
+        <Picker
+          onPick={this._handleSongChange}
+        />
+        <Settings
+          settings={this.state.settings}
+          onChange={this._handleSettingsChange}
+        />
         <Song
           ref="song"
           song={this.state.song}
