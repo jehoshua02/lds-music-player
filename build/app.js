@@ -25339,8 +25339,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(185);
-	var SearchSelect = __webpack_require__(341);
-	var songs = __webpack_require__(342);
+	var SongPicker = __webpack_require__(349);
 	var scriptureUri = __webpack_require__(348);
 	
 	var App = React.createClass({
@@ -25348,7 +25347,7 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      song: songs.random(),
+	      song: null,
 	      vocals: true,
 	      continuous: false,
 	      autoPlay: false
@@ -25360,16 +25359,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(SearchSelect, {
-	        search: this._searchSongs,
-	        renderResult: this._renderSearchResult,
-	        onSelect: this._handleSearchSelect
-	      }),
-	      React.createElement(
-	        'button',
-	        { onClick: this._handleRandomSong },
-	        'Random'
-	      ),
+	      React.createElement(SongPicker, { onPick: this._handleSongChange }),
 	      React.createElement(
 	        'label',
 	        null,
@@ -25443,13 +25433,8 @@
 	      }, null, 2)
 	    );
 	  },
-	  _searchSongs: function _searchSongs(value) {
-	    return songs.search(value).filter(function (result) {
-	      return result.score < 0.5;
-	    });
-	  },
-	  _handleSearchSelect: function _handleSearchSelect(result) {
-	    this.setState({ song: result.item });
+	  _handleSongChange: function _handleSongChange(song) {
+	    this.setState({ song: song });
 	  },
 	  _handleVocalsToggle: function _handleVocalsToggle() {
 	    if (!this.refs.audio) {
@@ -25473,9 +25458,6 @@
 	  },
 	  _handleAutoPlayToggle: function _handleAutoPlayToggle() {
 	    this.setState({ autoPlay: !this.state.autoPlay });
-	  },
-	  _handleRandomSong: function _handleRandomSong() {
-	    this.setState({ song: songs.random() });
 	  },
 	  _handleEnded: function _handleEnded() {
 	    this._handleRandomSong();
@@ -90306,6 +90288,71 @@
 	  var hash = '#' + (start - 1);
 	  return '//lds.org' + uri + hash;
 	};
+
+/***/ },
+/* 349 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(185);
+	var T = React.PropTypes;
+	var SearchSelect = __webpack_require__(341);
+	var songs = __webpack_require__(342);
+	
+	var SongPicker = React.createClass({
+	  displayName: 'SongPicker',
+	
+	  propTypes: {
+	    onPick: T.func.isRequired
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'span',
+	      null,
+	      React.createElement(SearchSelect, {
+	        search: this._searchSongs,
+	        renderResult: this._renderSearchResult,
+	        onSelect: this._handleSearchSelect
+	      }),
+	      React.createElement(
+	        'button',
+	        { onClick: this._handleRandomSong },
+	        'Random'
+	      )
+	    );
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.props.onPick(songs.random());
+	  },
+	  _searchSongs: function _searchSongs(value) {
+	    return songs.search(value).filter(function (result) {
+	      return result.score < 0.5;
+	    });
+	  },
+	  _renderSearchResult: function _renderSearchResult(result) {
+	    var song = result.item;
+	    return React.createElement(
+	      'pre',
+	      null,
+	      JSON.stringify({
+	        id: song.id,
+	        number: song.number,
+	        name: song.name,
+	        firstLine: song.firstLine,
+	        score: result.score
+	      }, null, 2)
+	    );
+	  },
+	  _handleSearchSelect: function _handleSearchSelect(result) {
+	    this.props.onPick(result.item);
+	  },
+	  _handleRandomSong: function _handleRandomSong() {
+	    this.props.onPick(songs.random());
+	  }
+	});
+	
+	module.exports = SongPicker;
 
 /***/ }
 /******/ ]);
