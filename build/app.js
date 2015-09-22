@@ -25340,7 +25340,8 @@
 	
 	var React = __webpack_require__(185);
 	var SearchSelect = __webpack_require__(341);
-	var songs = __webpack_require__(343);
+	var songs = __webpack_require__(342);
+	var scriptureUri = __webpack_require__(348);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -25354,6 +25355,7 @@
 	    };
 	  },
 	  render: function render() {
+	    var song = this.state.song;
 	    var mp3Key = this.state.vocals ? 'vocalMP3' : 'instrumentalMP3';
 	    return React.createElement(
 	      'div',
@@ -25386,20 +25388,37 @@
 	        React.createElement('input', { type: 'checkbox', checked: this.state.continuous, onChange: this._handleContinuousToggle }),
 	        ' Continuous'
 	      ),
-	      this.state.song !== null && React.createElement(
+	      song !== null && React.createElement(
 	        'div',
 	        null,
 	        React.createElement('audio', {
 	          ref: 'audio',
-	          src: this.state.song.counterparts[mp3Key].url,
+	          src: song.counterparts[mp3Key].url,
 	          controls: true,
 	          autoPlay: this.state.autoPlay
 	        }),
-	        React.createElement('iframe', { src: this.state.song.counterparts.singlePDF.url }),
+	        React.createElement('iframe', { src: song.counterparts.singlePDF.url }),
+	        React.createElement(
+	          'ul',
+	          null,
+	          song.scriptures.map((function (scripture, key) {
+	            var href = scriptureUri.toHref(scripture.uri);
+	            var text = scriptureUri.toRef(scripture.uri);
+	            return React.createElement(
+	              'li',
+	              { key: key },
+	              React.createElement(
+	                'a',
+	                { href: href, target: '_blank' },
+	                text
+	              )
+	            );
+	          }).bind(this))
+	        ),
 	        React.createElement(
 	          'pre',
 	          null,
-	          JSON.stringify(this.state.song, null, 2)
+	          JSON.stringify(song, null, 2)
 	        )
 	      )
 	    );
@@ -25518,14 +25537,13 @@
 	module.exports = SearchSelect;
 
 /***/ },
-/* 342 */,
-/* 343 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Fuse = __webpack_require__(344);
-	var randomInt = __webpack_require__(349);
+	var Fuse = __webpack_require__(343);
+	var randomInt = __webpack_require__(344);
 	
 	var songs = [];
 	songs = songs.concat(__webpack_require__(345).items);
@@ -25545,7 +25563,7 @@
 	};
 
 /***/ },
-/* 344 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26020,6 +26038,25 @@
 	  }
 	
 	})(this);
+
+/***/ },
+/* 344 */
+/***/ function(module, exports) {
+
+	'use strict';
+	module.exports = function (min, max) {
+		if (max === undefined) {
+			max = min;
+			min = 0;
+		}
+	
+		if (typeof min !== 'number' || typeof max !== 'number') {
+			throw new TypeError('Expected all arguments to be numbers');
+		}
+	
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	};
+
 
 /***/ },
 /* 345 */
@@ -90244,24 +90281,31 @@
 
 /***/ },
 /* 347 */,
-/* 348 */,
-/* 349 */
+/* 348 */
 /***/ function(module, exports) {
 
 	'use strict';
-	module.exports = function (min, max) {
-		if (max === undefined) {
-			max = min;
-			min = 0;
-		}
 	
-		if (typeof min !== 'number' || typeof max !== 'number') {
-			throw new TypeError('Expected all arguments to be numbers');
-		}
+	function parseUri(uri) {
+	  var parts = uri.split('/');
+	  return {
+	    work: parts[2].toUpperCase(),
+	    book: parts[3],
+	    verse: parts[4]
+	  };
+	}
 	
-		return Math.floor(Math.random() * (max - min + 1) + min);
+	module.exports.toRef = function (uri) {
+	  var parts = parseUri(uri);
+	  return parts.book.toUpperCase() + ' ' + parts.verse.replace('.', ':');
 	};
-
+	
+	module.exports.toHref = function (uri) {
+	  var parts = parseUri(uri);
+	  var start = parseInt(parts.verse.match(/^\d+\.(\d+).*$/)[1]);
+	  var hash = '#' + (start - 1);
+	  return '//lds.org' + uri + hash;
+	};
 
 /***/ }
 /******/ ]);

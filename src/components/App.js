@@ -1,6 +1,7 @@
 var React = require('react');
 var SearchSelect = require('./SearchSelect');
 var songs = require('../modules/songs');
+var scriptureUri = require('../modules/scriptureUri');
 
 var App = React.createClass({
   getInitialState: function () {
@@ -12,6 +13,7 @@ var App = React.createClass({
     };
   },
   render: function () {
+    var song = this.state.song;
     var mp3Key = this.state.vocals ? 'vocalMP3' : 'instrumentalMP3';
     return (
       <div>
@@ -30,16 +32,25 @@ var App = React.createClass({
         <label>
           <input type="checkbox" checked={this.state.continuous} onChange={this._handleContinuousToggle} /> Continuous
         </label>
-        {this.state.song !== null && (
+        {song !== null && (
           <div>
             <audio
               ref="audio"
-              src={this.state.song.counterparts[mp3Key].url}
+              src={song.counterparts[mp3Key].url}
               controls
               autoPlay={this.state.autoPlay}
             />
-            <iframe src={this.state.song.counterparts.singlePDF.url} />
-            <pre>{JSON.stringify(this.state.song, null, 2)}</pre>
+            <iframe src={song.counterparts.singlePDF.url} />
+            <ul>
+              {song.scriptures.map(function (scripture, key) {
+                var href = scriptureUri.toHref(scripture.uri);
+                var text = scriptureUri.toRef(scripture.uri);
+                return (
+                  <li key={key}><a href={href} target="_blank">{text}</a></li>
+                );
+              }.bind(this))}
+            </ul>
+            <pre>{JSON.stringify(song, null, 2)}</pre>
           </div>
         )}
       </div>
