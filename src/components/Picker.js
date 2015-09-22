@@ -1,9 +1,9 @@
 var React = require('react');
 var T = React.PropTypes;
 var SearchSelect = require('./SearchSelect');
-var songs = require('../modules/songs');
+var Songs = require('../modules/Songs');
 
-var SongPicker = React.createClass({
+var Picker = React.createClass({
   propTypes: {
     onPick: T.func.isRequired
   },
@@ -20,10 +20,10 @@ var SongPicker = React.createClass({
     );
   },
   componentDidMount: function () {
-    this.props.onPick(songs.random());
+    this.props.onPick(Songs.random());
   },
   _searchSongs: function (value) {
-    return songs.search(value).filter(function (result) {
+    return Songs.search(value).filter(function (result) {
       return result.score < 0.5;
     });
   },
@@ -43,8 +43,8 @@ var SongPicker = React.createClass({
     this.props.onPick(result.item);
   },
   _handleRandomSong: function () {
-    this.props.onPick(songs.random());
+    this.props.onPick(Songs.random());
   }
 });
 
-module.exports = SongPicker;
+module.exports = Picker;
