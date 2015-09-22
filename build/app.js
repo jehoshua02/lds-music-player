@@ -90133,7 +90133,68 @@
 
 /***/ },
 /* 349 */,
-/* 350 */,
+/* 350 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(185);
+	var T = React.PropTypes;
+	
+	var Settings = React.createClass({
+	  displayName: 'Settings',
+	
+	  propTypes: {
+	    vocals: T.bool.isRequired,
+	    autoPlay: T.bool.isRequired,
+	    continuous: T.bool.isRequired
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          checked: this.props.settings.vocals,
+	          onChange: this._toggle.bind(this, 'vocals')
+	        }),
+	        ' Vocals'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          checked: this.props.settings.autoPlay,
+	          onChange: this._toggle.bind(this, 'autoPlay')
+	        }),
+	        ' AutoPlay'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          checked: this.props.settings.continuous,
+	          onChange: this._toggle.bind(this, 'continuous')
+	        }),
+	        ' Continuous'
+	      )
+	    );
+	  },
+	  _toggle: function _toggle(key) {
+	    var settings = Object.assign({}, this.props.settings);
+	    settings[key] = !settings[key];
+	    this.props.onChange(settings);
+	  }
+	});
+	
+	module.exports = Settings;
+
+/***/ },
 /* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -90206,6 +90267,7 @@
 	
 	var React = __webpack_require__(185);
 	var Picker = __webpack_require__(351);
+	var Settings = __webpack_require__(350);
 	var Song = __webpack_require__(353);
 	var Songs = __webpack_require__(354);
 	
@@ -90215,45 +90277,26 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      song: Songs.random(),
-	      vocals: true,
-	      continuous: false,
-	      autoPlay: false
+	      settings: {
+	        vocals: true,
+	        continuous: false,
+	        autoPlay: false
+	      }
 	    };
 	  },
 	  render: function render() {
 	    var song = this.state.song;
-	    var mp3Key = this.state.vocals ? 'vocalMP3' : 'instrumentalMP3';
+	    var mp3Key = this.state.settings.vocals ? 'vocalMP3' : 'instrumentalMP3';
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(Picker, { onPick: this._handleSongChange }),
-	      React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement('input', { type: 'checkbox', checked: this.state.vocals, onChange: this._handleVocalsToggle }),
-	          ' Vocals'
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement('input', { type: 'checkbox', checked: this.state.autoPlay, onChange: this._handleAutoPlayToggle }),
-	          ' AutoPlay'
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement('input', { type: 'checkbox', checked: this.state.continuous, onChange: this._handleContinuousToggle }),
-	          ' Continuous'
-	        )
-	      ),
+	      React.createElement(Settings, { settings: this.state.settings, onChange: this._handleSettingsChange }),
 	      React.createElement(Song, {
 	        ref: 'song',
 	        song: this.state.song,
-	        vocals: this.state.vocals,
-	        autoPlay: this.state.autoPlay,
+	        vocals: this.state.settings.vocals,
+	        autoPlay: this.state.settings.autoPlay,
 	        onEnd: this._handleSongEnd
 	      })
 	    );
@@ -90261,19 +90304,13 @@
 	  _handleSongChange: function _handleSongChange(song) {
 	    this.setState({ song: song });
 	  },
-	  _handleVocalsToggle: function _handleVocalsToggle() {
-	    this.setState({ vocals: !this.state.vocals });
-	  },
-	  _handleContinuousToggle: function _handleContinuousToggle() {
-	    this.setState({ continuous: !this.state.continuous });
-	  },
-	  _handleAutoPlayToggle: function _handleAutoPlayToggle() {
-	    this.setState({ autoPlay: !this.state.autoPlay });
-	  },
 	  _handleSongEnd: function _handleSongEnd() {
-	    if (this.state.continuous === true) {
+	    if (this.state.settings.continuous === true) {
 	      this.setState({ song: Songs.random() });
 	    }
+	  },
+	  _handleSettingsChange: function _handleSettingsChange(settings) {
+	    this.setState({ settings: settings });
 	  }
 	});
 	
