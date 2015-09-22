@@ -1,5 +1,6 @@
 var React = require('react');
 var T = React.PropTypes;
+var styles = require('./styles');
 
 var Settings = React.createClass({
   propTypes: {

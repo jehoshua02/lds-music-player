@@ -3,6 +3,7 @@ var Picker = require('components/Picker');
 var Settings = require('components/Settings');
 var Song = require('components/Song');
 var Songs = require('modules/Songs');
+var styles = require('./styles');
 
 var Player = React.createClass({
   getInitialState: function () {
