@@ -6,3 +6,8 @@
 + Continuous sequential
 + Add collections
 + Separate markup from component?
++ Audio Component
++ Two Audio Tags
++ Ignore watch files
++ Deploy build files
++ Optimize build
