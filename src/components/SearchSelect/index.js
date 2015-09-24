@@ -1,6 +1,7 @@
 var React = require('react');
+var Radium = require('radium');
 var T = React.PropTypes;
-var styles = require('./styles');
+var s = require('modules/classesToStyles')(require('./styles'));
 
 var SearchSelect = React.createClass({
   propTypes: {
@@ -39,4 +40,4 @@ var SearchSelect = React.createClass({
   }
 });
 
-module.exports = SearchSelect;
+module.exports = Radium(SearchSelect);

@@ -1,6 +1,7 @@
 var React = require('react');
+var Radium = require('radium');
 var T = React.PropTypes;
-var styles = require('./styles');
+var s = require('modules/classesToStyles')(require('./styles'));
 
 var Settings = React.createClass({
   propTypes: {
@@ -45,4 +46,4 @@ var Settings = React.createClass({
   }
 });
 
-module.exports = Settings;
+module.exports = Radium(Settings);

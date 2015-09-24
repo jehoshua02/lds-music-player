@@ -1,7 +1,8 @@
 var React = require('react');
+var Radium = require('radium');
 var T = React.PropTypes;
 var scriptureUri = require('modules/scriptureUri');
-var styles = require('./styles');
+var s = require('modules/classesToStyles')(require('./styles'));
 
 var Song = React.createClass({
   propTypes: {
@@ -17,14 +18,16 @@ var Song = React.createClass({
     var song = this.props.song;
     var mp3Key = this.props.vocals ? 'vocalMP3' : 'instrumentalMP3';
     return (
-      <div>
-        <audio
-          ref="audio"
-          src={song.counterparts[mp3Key].url}
-          controls
-          autoPlay={this.props.autoPlay}
-        />
-        <iframe src={song.counterparts.singlePDF.url} />
+      <div style={s('song')}>
+        <div style={s('song__header')}>
+          <audio
+            ref="audio"
+            src={song.counterparts[mp3Key].url}
+            controls
+            autoPlay={this.props.autoPlay}
+          />
+        </div>
+        <iframe style={s('song__pdf')} src={song.counterparts.singlePDF.url} />
         {song.scriptures.length > 0 && (
           <ul>
             {song.scriptures.map(function (scripture, key) {
@@ -74,4 +77,4 @@ var Song = React.createClass({
   }
 });
 
-module.exports = Song;
+module.exports = Radium(Song);

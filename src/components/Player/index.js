@@ -1,9 +1,10 @@
 var React = require('react');
+var Radium = require('radium');
 var Picker = require('components/Picker');
 var Settings = require('components/Settings');
 var Song = require('components/Song');
 var Songs = require('modules/Songs');
-var styles = require('./styles');
+var s = require('modules/classesToStyles')(require('./styles'));
 
 var Player = React.createClass({
   getInitialState: function () {
@@ -20,7 +21,7 @@ var Player = React.createClass({
     var song = this.state.song;
     var mp3Key = this.state.settings.vocals ? 'vocalMP3' : 'instrumentalMP3';
     return (
-      <div>
+      <div style={s('lds-music-player')}>
         <Picker
           onPick={this._handleSongChange}
         />
@@ -51,4 +52,4 @@ var Player = React.createClass({
   }
 });
 
-module.exports = Player;
+module.exports = Radium(Player);
