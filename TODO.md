@@ -1,4 +1,7 @@
-+ Style with Radium
++ Decide how to style:
+  + Sass
+  + CSSModules
+  + Radium
 + Filter on collection
 + Filter on topic
 + Guard against data inconsistencies

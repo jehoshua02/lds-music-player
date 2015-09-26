@@ -3,7 +3,6 @@ var Radium = require('radium');
 var T = React.PropTypes;
 var SearchSelect = require('components/SearchSelect');
 var Songs = require('modules/Songs');
-var s = require('modules/classesToStyles')(require('./styles'));
 
 var Picker = React.createClass({
   propTypes: {

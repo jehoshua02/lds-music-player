@@ -1,7 +1,6 @@
 var React = require('react');
 var Radium = require('radium');
 var T = React.PropTypes;
-var s = require('modules/classesToStyles')(require('./styles'));
 
 var SearchSelect = React.createClass({
   propTypes: {
@@ -18,12 +17,19 @@ var SearchSelect = React.createClass({
     var results = this.props.search(this.state.value);
     return (
       <span>
-        <input type="text" placeholder="Search" onChange={this._handleChange} />
+        <input
+          type="text"
+          placeholder="Search"
+          onChange={this._handleChange}
+        />
         {results.length > 0 && (
           <ul>
             {results.map(function (result, key) {
               return (
-                <li key={key} onClick={this._handleSelect.bind(this, result)}>{this.props.renderResult(result)}</li>
+                <li
+                  key={key}
+                  onClick={this._handleSelect.bind(this, result)}
+                >{this.props.renderResult(result)}</li>
               );
             }.bind(this))}
           </ul>

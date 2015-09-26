@@ -1,12 +1,17 @@
 var React = require('react');
 var Radium = require('radium');
 var T = React.PropTypes;
-var scriptureUri = require('modules/scriptureUri');
-var s = require('modules/classesToStyles')(require('./styles'));
+var styles = require('./styles');
 
-var Song = React.createClass({
+var Audio = React.createClass({
   propTypes: {
-    song: T.object.isRequired
+    src: T.shape({
+      vocal: T.string.isRequired,
+      instrumental: T.string.isRequired,
+    }).isRequired,
+    vocals: T.bool.isRequired,
+    autoPlay: T.bool.isRequired,
+    onEnd: T.func.isRequired,
   },
   getInitialState: function () {
     return {
@@ -15,32 +20,15 @@ var Song = React.createClass({
     };
   },
   render: function () {
-    var song = this.props.song;
-    var mp3Key = this.props.vocals ? 'vocalMP3' : 'instrumentalMP3';
+    var src = this.props.src[this.props.vocals ? 'vocal' : 'instrumental'];
     return (
-      <div style={s('song')}>
-        <div style={s('song__header')}>
-          <audio
-            ref="audio"
-            src={song.counterparts[mp3Key].url}
-            controls
-            autoPlay={this.props.autoPlay}
-          />
-        </div>
-        <iframe style={s('song__pdf')} src={song.counterparts.singlePDF.url} />
-        {song.scriptures.length > 0 && (
-          <ul>
-            {song.scriptures.map(function (scripture, key) {
-              var href = scriptureUri.toHref(scripture.uri);
-              var text = scriptureUri.toRef(scripture.uri);
-              return (
-                <li key={key}><a href={href} target="_blank">{text}</a></li>
-              );
-            }.bind(this))}
-          </ul>
-        )}
-        <pre>{JSON.stringify(song, null, 2)}</pre>
-      </div>
+      <audio
+        style={styles.base}
+        ref="audio"
+        src={src}
+        controls
+        autoPlay={this.props.autoPlay}
+      />
     );
   },
   componentDidMount: function () {
@@ -77,4 +65,4 @@ var Song = React.createClass({
   }
 });
 
-module.exports = Radium(Song);
+module.exports = Radium(Audio);

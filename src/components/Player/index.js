@@ -2,9 +2,9 @@ var React = require('react');
 var Radium = require('radium');
 var Picker = require('components/Picker');
 var Settings = require('components/Settings');
-var Song = require('components/Song');
+var Audio = require('components/Audio');
 var Songs = require('modules/Songs');
-var s = require('modules/classesToStyles')(require('./styles'));
+var scriptureUri = require('modules/scriptureUri');
 
 var Player = React.createClass({
   getInitialState: function () {
@@ -19,23 +19,45 @@ var Player = React.createClass({
   },
   render: function () {
     var song = this.state.song;
-    var mp3Key = this.state.settings.vocals ? 'vocalMP3' : 'instrumentalMP3';
+    console.log(song);
     return (
-      <div style={s('lds-music-player')}>
+      <div>
+
         <Picker
           onPick={this._handleSongChange}
         />
+
         <Settings
           settings={this.state.settings}
           onChange={this._handleSettingsChange}
         />
-        <Song
+
+        <iframe src={song.counterparts.singlePDF.url} />
+
+        <Audio
           ref="song"
-          song={this.state.song}
+          src={{
+            vocal: song.counterparts.vocalMP3.url,
+            instrumental: song.counterparts.instrumentalMP3.url
+          }}
           vocals={this.state.settings.vocals}
           autoPlay={this.state.settings.autoPlay}
           onEnd={this._handleSongEnd}
         />
+
+        {song.scriptures.length > 0 && (
+          <ul>
+            {song.scriptures.map(function (scripture, key) {
+              var href = scriptureUri.toHref(scripture.uri);
+              var text = scriptureUri.toRef(scripture.uri);
+              return (
+                <li key={key}>
+                  <a href={href} target="_blank">{text}</a>
+                </li>
+              );
+            }.bind(this))}
+          </ul>
+        )}
       </div>
     );
   },
