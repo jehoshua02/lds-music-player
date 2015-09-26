@@ -1,3 +1,5 @@
++ Figure out design
++ Refactor components to match design
 + Decide how to style:
   + Sass
   + CSSModules
@@ -8,22 +10,21 @@
 + Search verses
 + Add collections
 + Separate markup from component?
-+ Audio Component
 + Two Audio Tags
 + Ignore watch files
 + Deploy build files
 + Optimize build
 
 
+# Design Requirements
 
-# Design
-
-+ sheet music full screen
++ sheet music
 + audio controls
-+ Settings
-  + continuous
-  + autoPlay
-  + vocals
-  + random
-+ Search
-+ Next (random or sequential)
++ Settings (cog)
+  + continuous (refresh)
+  + autoPlay (play-circle)
+  + vocals (music)
+  + random (random)
++ Search + Results (search)
++ Next (random or sequential; fast-forward)
++ Scriptures (book)
