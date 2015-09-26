@@ -1,9 +1,4 @@
-+ Figure out design
 + Refactor components to match design
-+ Decide how to style:
-  + Sass
-  + CSSModules
-  + Radium
 + Filter on collection
 + Filter on topic
 + Guard against data inconsistencies
@@ -19,7 +14,7 @@
 # Design Requirements
 
 + sheet music
-+ audio controls
++ audio controls (maybe don't use native controls?)
 + Settings (cog)
   + continuous (refresh)
   + autoPlay (play-circle)
