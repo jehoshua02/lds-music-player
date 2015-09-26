@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html{% if(o.htmlWebpackPlugin.files.manifest) { %} manifest="{%= o.htmlWebpackPlugin.files.manifest %}"{% } %}>
+<html class="fill-parent" {% if(o.htmlWebpackPlugin.files.manifest) { %} manifest="{%= o.htmlWebpackPlugin.files.manifest %}"{% } %}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,20 +14,10 @@
     <link href="{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet" />
     {% } %}
 
-    <style>
-    html, body, #app {
-      height: 100%;
-      width: 100%;
-    }
-    body {
-      margin: 0;
-    }
-    </style>
-
   </head>
-  <body>
+  <body class="fill-parent">
 
-    <div id="app"></div>
+    <div id="app" class="fill-parent"></div>
 
     {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
     <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
