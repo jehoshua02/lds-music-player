@@ -4,9 +4,9 @@ var T = React.PropTypes;
 var SearchSelect = require('components/SearchSelect');
 var Songs = require('modules/Songs');
 
-var Picker = React.createClass({
+var Search = React.createClass({
   propTypes: {
-    onPick: T.func.isRequired
+    onSelect: T.func.isRequired
   },
   render: function () {
     return (
@@ -16,12 +16,11 @@ var Picker = React.createClass({
           renderResult={this._renderSearchResult}
           onSelect={this._handleSearchSelect}
         />
-        <button onClick={this._handleRandomSong}>Random</button>
       </span>
     );
   },
   componentDidMount: function () {
-    this.props.onPick(Songs.random());
+    this.props.onSelect(Songs.random());
   },
   _searchSongs: function (value) {
     return Songs.search(value).filter(function (result) {
@@ -41,11 +40,8 @@ var Picker = React.createClass({
     );
   },
   _handleSearchSelect: function (result) {
-    this.props.onPick(result.item);
-  },
-  _handleRandomSong: function () {
-    this.props.onPick(Songs.random());
+    this.props.onSelect(result.item);
   }
 });
 
-module.exports = Radium(Picker);
+module.exports = Radium(Search);

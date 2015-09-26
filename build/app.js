@@ -25340,11 +25340,11 @@
 	
 	var React = __webpack_require__(185);
 	var Radium = __webpack_require__(341);
-	var Picker = __webpack_require__(364);
-	var Settings = __webpack_require__(374);
-	var Song = __webpack_require__(376);
-	var Songs = __webpack_require__(368);
-	var s = __webpack_require__(366)(__webpack_require__(379));
+	var Search = __webpack_require__(364);
+	var Settings = __webpack_require__(371);
+	var Audio = __webpack_require__(372);
+	var Songs = __webpack_require__(366);
+	var scriptureUri = __webpack_require__(374);
 	
 	var Player = React.createClass({
 	  displayName: 'Player',
@@ -25355,42 +25355,75 @@
 	      settings: {
 	        vocals: true,
 	        continuous: false,
-	        autoPlay: false
+	        autoPlay: false,
+	        random: false
 	      }
 	    };
 	  },
 	  render: function render() {
 	    var song = this.state.song;
-	    var mp3Key = this.state.settings.vocals ? 'vocalMP3' : 'instrumentalMP3';
 	    return React.createElement(
 	      'div',
-	      { style: s('lds-music-player') },
-	      React.createElement(Picker, {
-	        onPick: this._handleSongChange
+	      null,
+	      React.createElement(Search, {
+	        onSelect: this._handleSongSelect
 	      }),
+	      React.createElement(
+	        'button',
+	        { onClick: this._handleNextSong },
+	        'Next'
+	      ),
 	      React.createElement(Settings, {
 	        settings: this.state.settings,
 	        onChange: this._handleSettingsChange
 	      }),
-	      React.createElement(Song, {
+	      React.createElement(Audio, {
 	        ref: 'song',
-	        song: this.state.song,
+	        src: {
+	          vocal: song.counterparts.vocalMP3.url,
+	          instrumental: song.counterparts.instrumentalMP3.url
+	        },
 	        vocals: this.state.settings.vocals,
 	        autoPlay: this.state.settings.autoPlay,
 	        onEnd: this._handleSongEnd
-	      })
+	      }),
+	      song.scriptures.length > 0 && React.createElement(
+	        'ul',
+	        null,
+	        song.scriptures.map((function (scripture, key) {
+	          var href = scriptureUri.toHref(scripture.uri);
+	          var text = scriptureUri.toRef(scripture.uri);
+	          return React.createElement(
+	            'li',
+	            { key: key },
+	            React.createElement(
+	              'a',
+	              { href: href, target: '_blank' },
+	              text
+	            )
+	          );
+	        }).bind(this))
+	      ),
+	      React.createElement('iframe', { src: song.counterparts.singlePDF.url })
 	    );
 	  },
-	  _handleSongChange: function _handleSongChange(song) {
+	  _handleSettingsChange: function _handleSettingsChange(settings) {
+	    this.setState({ settings: settings });
+	  },
+	  _handleSongSelect: function _handleSongSelect(song) {
 	    this.setState({ song: song });
 	  },
 	  _handleSongEnd: function _handleSongEnd() {
 	    if (this.state.settings.continuous === true) {
-	      this.setState({ song: Songs.random() });
+	      this._handleNextSong();
 	    }
 	  },
-	  _handleSettingsChange: function _handleSettingsChange(settings) {
-	    this.setState({ settings: settings });
+	  _handleNextSong: function _handleNextSong() {
+	    if (this.state.settings.random) {
+	      this.setState({ song: Songs.random() });
+	    } else {
+	      this.setState({ song: Songs.next(this.state.song) });
+	    }
 	  }
 	});
 	
@@ -27211,14 +27244,13 @@
 	var Radium = __webpack_require__(341);
 	var T = React.PropTypes;
 	var SearchSelect = __webpack_require__(365);
-	var Songs = __webpack_require__(368);
-	var s = __webpack_require__(366)(__webpack_require__(373));
+	var Songs = __webpack_require__(366);
 	
-	var Picker = React.createClass({
-	  displayName: 'Picker',
+	var Search = React.createClass({
+	  displayName: 'Search',
 	
 	  propTypes: {
-	    onPick: T.func.isRequired
+	    onSelect: T.func.isRequired
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -27228,16 +27260,11 @@
 	        search: this._searchSongs,
 	        renderResult: this._renderSearchResult,
 	        onSelect: this._handleSearchSelect
-	      }),
-	      React.createElement(
-	        'button',
-	        { onClick: this._handleRandomSong },
-	        'Random'
-	      )
+	      })
 	    );
 	  },
 	  componentDidMount: function componentDidMount() {
-	    this.props.onPick(Songs.random());
+	    this.props.onSelect(Songs.random());
 	  },
 	  _searchSongs: function _searchSongs(value) {
 	    return Songs.search(value).filter(function (result) {
@@ -27259,14 +27286,11 @@
 	    );
 	  },
 	  _handleSearchSelect: function _handleSearchSelect(result) {
-	    this.props.onPick(result.item);
-	  },
-	  _handleRandomSong: function _handleRandomSong() {
-	    this.props.onPick(Songs.random());
+	    this.props.onSelect(result.item);
 	  }
 	});
 	
-	module.exports = Radium(Picker);
+	module.exports = Radium(Search);
 
 /***/ },
 /* 365 */
@@ -27277,7 +27301,6 @@
 	var React = __webpack_require__(185);
 	var Radium = __webpack_require__(341);
 	var T = React.PropTypes;
-	var s = __webpack_require__(366)(__webpack_require__(367));
 	
 	var SearchSelect = React.createClass({
 	  displayName: 'SearchSelect',
@@ -27297,14 +27320,21 @@
 	    return React.createElement(
 	      'span',
 	      null,
-	      React.createElement('input', { type: 'text', placeholder: 'Search', onChange: this._handleChange }),
+	      React.createElement('input', {
+	        type: 'text',
+	        placeholder: 'Search',
+	        onChange: this._handleChange
+	      }),
 	      results.length > 0 && React.createElement(
 	        'ul',
 	        null,
 	        results.map((function (result, key) {
 	          return React.createElement(
 	            'li',
-	            { key: key, onClick: this._handleSelect.bind(this, result) },
+	            {
+	              key: key,
+	              onClick: this._handleSelect.bind(this, result)
+	            },
 	            this.props.renderResult(result)
 	          );
 	        }).bind(this))
@@ -27324,47 +27354,19 @@
 
 /***/ },
 /* 366 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	function classesToStyles() /*className, [className, ...]*/{
-	  var args = Array.slice(arguments);
-	  var styles = [];
-	  for (var i = 0; i < args.length; i++) {
-	    if (this[args[i]]) {
-	      styles.push(this[args[i]]);
-	    }
-	  }
-	  return styles;
-	}
-	
-	function factory(styles) {
-	  return classesToStyles.bind(styles);
-	}
-	
-	module.exports = factory;
-
-/***/ },
-/* 367 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {};
-
-/***/ },
-/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Fuse = __webpack_require__(369);
-	var randomInt = __webpack_require__(370);
+	var Fuse = __webpack_require__(367);
+	var randomInt = __webpack_require__(368);
 	
 	var songs = [];
-	songs = songs.concat(__webpack_require__(371).items);
-	songs = songs.concat(__webpack_require__(372).items);
+	songs = songs.concat(__webpack_require__(369).items);
+	songs = songs.concat(__webpack_require__(370).items);
+	var ids = songs.map(function (song) {
+	  return song.id;
+	});
 	
 	var fuse = new Fuse(songs, {
 	  keys: ['name', 'number', 'firstLine'],
@@ -27378,9 +27380,17 @@
 	module.exports.random = function () {
 	  return songs[randomInt(0, songs.length - 1)];
 	};
+	
+	module.exports.next = function (song) {
+	  var index = ids.indexOf(song.id) + 1;
+	  if (index === songs.length) {
+	    index = 0;
+	  }
+	  return songs[index];
+	};
 
 /***/ },
-/* 369 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27857,7 +27867,7 @@
 	})(this);
 
 /***/ },
-/* 370 */
+/* 368 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27876,7 +27886,7 @@
 
 
 /***/ },
-/* 371 */
+/* 369 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -66721,7 +66731,7 @@
 	};
 
 /***/ },
-/* 372 */
+/* 370 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -92097,15 +92107,7 @@
 	};
 
 /***/ },
-/* 373 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {};
-
-/***/ },
-/* 374 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92113,7 +92115,6 @@
 	var React = __webpack_require__(185);
 	var Radium = __webpack_require__(341);
 	var T = React.PropTypes;
-	var s = __webpack_require__(366)(__webpack_require__(375));
 	
 	var Settings = React.createClass({
 	  displayName: 'Settings',
@@ -92122,7 +92123,8 @@
 	    settings: T.shape({
 	      vocals: T.bool.isRequired,
 	      autoPlay: T.bool.isRequired,
-	      continuous: T.bool.isRequired
+	      continuous: T.bool.isRequired,
+	      random: T.bool.isRequired
 	    }).isRequired,
 	    onChange: T.func.isRequired
 	  },
@@ -92159,6 +92161,16 @@
 	          onChange: this._toggle.bind(this, 'continuous')
 	        }),
 	        ' Continuous'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          checked: this.props.settings.random,
+	          onChange: this._toggle.bind(this, 'random')
+	        }),
+	        ' Random'
 	      )
 	    );
 	  },
@@ -92172,15 +92184,7 @@
 	module.exports = Radium(Settings);
 
 /***/ },
-/* 375 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {};
-
-/***/ },
-/* 376 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92188,14 +92192,19 @@
 	var React = __webpack_require__(185);
 	var Radium = __webpack_require__(341);
 	var T = React.PropTypes;
-	var scriptureUri = __webpack_require__(377);
-	var s = __webpack_require__(366)(__webpack_require__(378));
+	var styles = __webpack_require__(373);
 	
-	var Song = React.createClass({
-	  displayName: 'Song',
+	var Audio = React.createClass({
+	  displayName: 'Audio',
 	
 	  propTypes: {
-	    song: T.object.isRequired
+	    src: T.shape({
+	      vocal: T.string.isRequired,
+	      instrumental: T.string.isRequired
+	    }).isRequired,
+	    vocals: T.bool.isRequired,
+	    autoPlay: T.bool.isRequired,
+	    onEnd: T.func.isRequired
 	  },
 	  getInitialState: function getInitialState() {
 	    return {
@@ -92204,45 +92213,14 @@
 	    };
 	  },
 	  render: function render() {
-	    var song = this.props.song;
-	    var mp3Key = this.props.vocals ? 'vocalMP3' : 'instrumentalMP3';
-	    return React.createElement(
-	      'div',
-	      { style: s('song') },
-	      React.createElement(
-	        'div',
-	        { style: s('song__header') },
-	        React.createElement('audio', {
-	          ref: 'audio',
-	          src: song.counterparts[mp3Key].url,
-	          controls: true,
-	          autoPlay: this.props.autoPlay
-	        })
-	      ),
-	      React.createElement('iframe', { style: s('song__pdf'), src: song.counterparts.singlePDF.url }),
-	      song.scriptures.length > 0 && React.createElement(
-	        'ul',
-	        null,
-	        song.scriptures.map((function (scripture, key) {
-	          var href = scriptureUri.toHref(scripture.uri);
-	          var text = scriptureUri.toRef(scripture.uri);
-	          return React.createElement(
-	            'li',
-	            { key: key },
-	            React.createElement(
-	              'a',
-	              { href: href, target: '_blank' },
-	              text
-	            )
-	          );
-	        }).bind(this))
-	      ),
-	      React.createElement(
-	        'pre',
-	        null,
-	        JSON.stringify(song, null, 2)
-	      )
-	    );
+	    var src = this.props.src[this.props.vocals ? 'vocal' : 'instrumental'];
+	    return React.createElement('audio', {
+	      style: styles.base,
+	      ref: 'audio',
+	      src: src,
+	      controls: true,
+	      autoPlay: this.props.autoPlay
+	    });
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this._audioNode().addEventListener('ended', this.props.onEnd);
@@ -92282,10 +92260,20 @@
 	  }
 	});
 	
-	module.exports = Radium(Song);
+	module.exports = Radium(Audio);
 
 /***/ },
-/* 377 */
+/* 373 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  root: {}
+	};
+
+/***/ },
+/* 374 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -92309,47 +92297,6 @@
 	  var start = parseInt(parts.verse.match(/^\d+\.(\d+).*$/)[1]);
 	  var hash = '#' + (start - 1);
 	  return '//lds.org' + uri + hash;
-	};
-
-/***/ },
-/* 378 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  // 'song': {
-	  //   position: 'fixed',
-	  //   top: 0,
-	  //   left: 0,
-	  //   height: '100%',
-	  //   width: '100%',
-	  //   zIndex: 1
-	  // },
-	  // 'song__header': {
-	  //   background: '1px solid #000'
-	  // },
-	  // 'song__pdf': {
-	  //   height: '100%',
-	  //   width: '100%'
-	  // }
-	};
-
-/***/ },
-/* 379 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	module.exports = {
-	  'lds-music-player': {
-	    position: 'relative',
-	    width: '100%',
-	    height: '100%',
-	    overflow: 'hidden',
-	    boxSizing: 'border-box',
-	    border: '1px solid red'
-	  }
 	};
 
 /***/ }

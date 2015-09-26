@@ -1,6 +1,6 @@
 var React = require('react');
 var Radium = require('radium');
-var Picker = require('components/Picker');
+var Search = require('components/Search');
 var Settings = require('components/Settings');
 var Audio = require('components/Audio');
 var Songs = require('modules/Songs');
@@ -13,26 +13,26 @@ var Player = React.createClass({
       settings: {
         vocals: true,
         continuous: false,
-        autoPlay: false
+        autoPlay: false,
+        random: false,
       }
     };
   },
   render: function () {
     var song = this.state.song;
-    console.log(song);
     return (
       <div>
 
-        <Picker
-          onPick={this._handleSongChange}
+        <Search
+          onSelect={this._handleSongSelect}
         />
+
+        <button onClick={this._handleNextSong}>Next</button>
 
         <Settings
           settings={this.state.settings}
           onChange={this._handleSettingsChange}
         />
-
-        <iframe src={song.counterparts.singlePDF.url} />
 
         <Audio
           ref="song"
@@ -58,19 +58,29 @@ var Player = React.createClass({
             }.bind(this))}
           </ul>
         )}
+
+        <iframe src={song.counterparts.singlePDF.url} />
+
       </div>
     );
   },
-  _handleSongChange: function (song) {
+  _handleSettingsChange: function (settings) {
+    this.setState({settings: settings});
+  },
+  _handleSongSelect: function (song) {
     this.setState({song: song});
   },
   _handleSongEnd: function () {
     if (this.state.settings.continuous === true) {
-      this.setState({song: Songs.random()});
+      this._handleNextSong();
     }
   },
-  _handleSettingsChange: function (settings) {
-    this.setState({settings: settings});
+  _handleNextSong: function () {
+    if (this.state.settings.random) {
+      this.setState({song: Songs.random()});
+    } else {
+      this.setState({song: Songs.next(this.state.song)});
+    }
   }
 });
 

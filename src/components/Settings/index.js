@@ -7,7 +7,8 @@ var Settings = React.createClass({
     settings: T.shape({
       vocals: T.bool.isRequired,
       autoPlay: T.bool.isRequired,
-      continuous: T.bool.isRequired
+      continuous: T.bool.isRequired,
+      random: T.bool.isRequired,
     }).isRequired,
     onChange: T.func.isRequired
   },
@@ -34,6 +35,13 @@ var Settings = React.createClass({
             checked={this.props.settings.continuous}
             onChange={this._toggle.bind(this, 'continuous')}
           /> Continuous
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={this.props.settings.random}
+            onChange={this._toggle.bind(this, 'random')}
+          /> Random
         </label>
       </div>
     );
