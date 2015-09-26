@@ -1,7 +1,5 @@
 var React = require('react');
-var Radium = require('radium');
 var T = React.PropTypes;
-var styles = require('./styles');
 
 var Audio = React.createClass({
   propTypes: {
@@ -23,7 +21,6 @@ var Audio = React.createClass({
     var src = this.props.src[this.props.vocals ? 'vocal' : 'instrumental'];
     return (
       <audio
-        style={styles.base}
         ref="audio"
         src={src}
         controls
@@ -65,4 +62,4 @@ var Audio = React.createClass({
   }
 });
 
-module.exports = Radium(Audio);
+module.exports = Audio;

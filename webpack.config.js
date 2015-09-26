@@ -2,10 +2,14 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var WebpackNotifierPlugin = require('webpack-notifier');
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
-  entry: path.resolve(__dirname, 'src/index.js'),
+  entry: [
+    path.resolve(__dirname, 'src/index.js'),
+    path.resolve(__dirname, 'src/styles.scss')
+  ],
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'app.js'
@@ -13,7 +17,8 @@ module.exports = {
   module: {
     loaders: [
       {test: /\.jsx?$/, loader: 'babel', exclude: /node_modules/},
-      {test: /\.json$/, loader: 'json'}
+      {test: /\.json$/, loader: 'json'},
+      {test: /\.scss$/, loader: ExtractTextPlugin.extract('style', 'css!sass')}
     ]
   },
   resolve: {
@@ -31,7 +36,8 @@ module.exports = {
     new BrowserSyncPlugin({
       host: 'localhost',
       port: 3000,
-      server: { baseDir: ['build'] }
-    })
+      server: {baseDir: ['build']}
+    }),
+    new ExtractTextPlugin('styles.css', { allChunks: true })
   ]
 };

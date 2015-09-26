@@ -1,5 +1,4 @@
 var React = require('react');
-var Radium = require('radium');
 var T = React.PropTypes;
 var SearchSelect = require('components/SearchSelect');
 var Songs = require('modules/Songs');
@@ -44,4 +43,4 @@ var Search = React.createClass({
   }
 });
 
-module.exports = Radium(Search);
+module.exports = Search;

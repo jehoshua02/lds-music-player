@@ -1,5 +1,4 @@
 var React = require('react');
-var Radium = require('radium');
 var Search = require('components/Search');
 var Settings = require('components/Settings');
 var Audio = require('components/Audio');
@@ -30,37 +29,38 @@ var Player = React.createClass({
           <button onClick={this._handleNextSong}>Next</button>
         </div>
 
-        <div open={this.state.panel !== this.getInitialState().panel}>
-          <span onClick={this._handlePanelClose}>Close</span>
-          {this.state.panel === 'search' && (
-            <Search onSelect={this._handleSongSelect} />
-          )}
-          {this.state.panel === 'settings' && (
-            <Settings
-              settings={this.state.settings}
-              onChange={this._handleSettingsChange}
-            />
-          )}
-          {this.state.panel === 'scriptures' && (
-            <ul>
-              {song.scriptures.map(function (scripture, key) {
-                var href = scriptureUri.toHref(scripture.uri);
-                var text = scriptureUri.toRef(scripture.uri);
-                return (
-                  <li key={key}>
-                    <a href={href} target="_blank">{text}</a>
-                  </li>
-                );
-              }.bind(this))}
-            </ul>
-          )}
-        </div>
+        <div>
+          <div open={this.state.panel !== this.getInitialState().panel}>
+            <span onClick={this._handlePanelClose}>Close</span>
+            {this.state.panel === 'search' && (
+              <Search onSelect={this._handleSongSelect} />
+            )}
+            {this.state.panel === 'settings' && (
+              <Settings
+                settings={this.state.settings}
+                onChange={this._handleSettingsChange}
+              />
+            )}
+            {this.state.panel === 'scriptures' && (
+              <ul>
+                {song.scriptures.map(function (scripture, key) {
+                  var href = scriptureUri.toHref(scripture.uri);
+                  var text = scriptureUri.toRef(scripture.uri);
+                  return (
+                    <li key={key}>
+                      <a href={href} target="_blank">{text}</a>
+                    </li>
+                  );
+                }.bind(this))}
+              </ul>
+            )}
+          </div>
 
-        <iframe src={song.counterparts.singlePDF.url} />
+          <iframe src={song.counterparts.singlePDF.url} />
+        </div>
 
         <div>
           <Audio
-            ref="song"
             src={{
               vocal: song.counterparts.vocalMP3.url,
               instrumental: song.counterparts.instrumentalMP3.url
@@ -99,4 +99,4 @@ var Player = React.createClass({
   }
 });
 
-module.exports = Radium(Player);
+module.exports = Player;
