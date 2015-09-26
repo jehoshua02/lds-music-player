@@ -25340,11 +25340,11 @@
 	
 	var React = __webpack_require__(185);
 	var Radium = __webpack_require__(341);
-	var Search = __webpack_require__(364);
-	var Settings = __webpack_require__(371);
-	var Audio = __webpack_require__(372);
-	var Songs = __webpack_require__(366);
-	var scriptureUri = __webpack_require__(374);
+	var Search = __webpack_require__(365);
+	var Settings = __webpack_require__(372);
+	var Audio = __webpack_require__(373);
+	var Songs = __webpack_require__(367);
+	var scriptureUri = __webpack_require__(375);
 	
 	var Player = React.createClass({
 	  displayName: 'Player',
@@ -25357,7 +25357,8 @@
 	        continuous: false,
 	        autoPlay: false,
 	        random: false
-	      }
+	      },
+	      panel: null
 	    };
 	  },
 	  render: function render() {
@@ -25365,47 +25366,83 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(Search, {
-	        onSelect: this._handleSongSelect
-	      }),
 	      React.createElement(
-	        'button',
-	        { onClick: this._handleNextSong },
-	        'Next'
-	      ),
-	      React.createElement(Settings, {
-	        settings: this.state.settings,
-	        onChange: this._handleSettingsChange
-	      }),
-	      React.createElement(Audio, {
-	        ref: 'song',
-	        src: {
-	          vocal: song.counterparts.vocalMP3.url,
-	          instrumental: song.counterparts.instrumentalMP3.url
-	        },
-	        vocals: this.state.settings.vocals,
-	        autoPlay: this.state.settings.autoPlay,
-	        onEnd: this._handleSongEnd
-	      }),
-	      song.scriptures.length > 0 && React.createElement(
-	        'ul',
+	        'div',
 	        null,
-	        song.scriptures.map((function (scripture, key) {
-	          var href = scriptureUri.toHref(scripture.uri);
-	          var text = scriptureUri.toRef(scripture.uri);
-	          return React.createElement(
-	            'li',
-	            { key: key },
-	            React.createElement(
-	              'a',
-	              { href: href, target: '_blank' },
-	              text
-	            )
-	          );
-	        }).bind(this))
+	        React.createElement(
+	          'button',
+	          { onClick: this._handleOpenPanel.bind(this, 'search') },
+	          'Search'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this._handleOpenPanel.bind(this, 'settings') },
+	          'Settings'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this._handleOpenPanel.bind(this, 'scriptures') },
+	          'Scriptures'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this._handleNextSong },
+	          'Next'
+	        )
 	      ),
-	      React.createElement('iframe', { src: song.counterparts.singlePDF.url })
+	      React.createElement(
+	        'div',
+	        { open: this.state.panel !== this.getInitialState().panel },
+	        React.createElement(
+	          'span',
+	          { onClick: this._handlePanelClose },
+	          'Close'
+	        ),
+	        this.state.panel === 'search' && React.createElement(Search, { onSelect: this._handleSongSelect }),
+	        this.state.panel === 'settings' && React.createElement(Settings, {
+	          settings: this.state.settings,
+	          onChange: this._handleSettingsChange
+	        }),
+	        this.state.panel === 'scriptures' && React.createElement(
+	          'ul',
+	          null,
+	          song.scriptures.map((function (scripture, key) {
+	            var href = scriptureUri.toHref(scripture.uri);
+	            var text = scriptureUri.toRef(scripture.uri);
+	            return React.createElement(
+	              'li',
+	              { key: key },
+	              React.createElement(
+	                'a',
+	                { href: href, target: '_blank' },
+	                text
+	              )
+	            );
+	          }).bind(this))
+	        )
+	      ),
+	      React.createElement('iframe', { src: song.counterparts.singlePDF.url }),
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(Audio, {
+	          ref: 'song',
+	          src: {
+	            vocal: song.counterparts.vocalMP3.url,
+	            instrumental: song.counterparts.instrumentalMP3.url
+	          },
+	          vocals: this.state.settings.vocals,
+	          autoPlay: this.state.settings.autoPlay,
+	          onEnd: this._handleSongEnd
+	        })
+	      )
 	    );
+	  },
+	  _handleOpenPanel: function _handleOpenPanel(which) {
+	    this.setState({ panel: which });
+	  },
+	  _handlePanelClose: function _handlePanelClose() {
+	    this.setState({ panel: this.getInitialState().panel });
 	  },
 	  _handleSettingsChange: function _handleSettingsChange(settings) {
 	    this.setState({ settings: settings });
@@ -27235,7 +27272,8 @@
 	module.exports = keyframes;
 
 /***/ },
-/* 364 */
+/* 364 */,
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27243,8 +27281,8 @@
 	var React = __webpack_require__(185);
 	var Radium = __webpack_require__(341);
 	var T = React.PropTypes;
-	var SearchSelect = __webpack_require__(365);
-	var Songs = __webpack_require__(366);
+	var SearchSelect = __webpack_require__(366);
+	var Songs = __webpack_require__(367);
 	
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -27293,7 +27331,7 @@
 	module.exports = Radium(Search);
 
 /***/ },
-/* 365 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27353,17 +27391,17 @@
 	module.exports = Radium(SearchSelect);
 
 /***/ },
-/* 366 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Fuse = __webpack_require__(367);
-	var randomInt = __webpack_require__(368);
+	var Fuse = __webpack_require__(368);
+	var randomInt = __webpack_require__(369);
 	
 	var songs = [];
-	songs = songs.concat(__webpack_require__(369).items);
 	songs = songs.concat(__webpack_require__(370).items);
+	songs = songs.concat(__webpack_require__(371).items);
 	var ids = songs.map(function (song) {
 	  return song.id;
 	});
@@ -27390,7 +27428,7 @@
 	};
 
 /***/ },
-/* 367 */
+/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27867,7 +27905,7 @@
 	})(this);
 
 /***/ },
-/* 368 */
+/* 369 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27886,7 +27924,7 @@
 
 
 /***/ },
-/* 369 */
+/* 370 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -66731,7 +66769,7 @@
 	};
 
 /***/ },
-/* 370 */
+/* 371 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -92107,7 +92145,7 @@
 	};
 
 /***/ },
-/* 371 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92184,7 +92222,7 @@
 	module.exports = Radium(Settings);
 
 /***/ },
-/* 372 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92192,7 +92230,7 @@
 	var React = __webpack_require__(185);
 	var Radium = __webpack_require__(341);
 	var T = React.PropTypes;
-	var styles = __webpack_require__(373);
+	var styles = __webpack_require__(374);
 	
 	var Audio = React.createClass({
 	  displayName: 'Audio',
@@ -92263,7 +92301,7 @@
 	module.exports = Radium(Audio);
 
 /***/ },
-/* 373 */
+/* 374 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -92273,7 +92311,7 @@
 	};
 
 /***/ },
-/* 374 */
+/* 375 */
 /***/ function(module, exports) {
 
 	'use strict';

@@ -14,55 +14,70 @@ var Player = React.createClass({
         vocals: true,
         continuous: false,
         autoPlay: false,
-        random: false,
-      }
+        random: false
+      },
+      panel: null
     };
   },
   render: function () {
     var song = this.state.song;
     return (
       <div>
+        <div>
+          <button onClick={this._handleOpenPanel.bind(this, 'search')}>Search</button>
+          <button onClick={this._handleOpenPanel.bind(this, 'settings')}>Settings</button>
+          <button onClick={this._handleOpenPanel.bind(this, 'scriptures')}>Scriptures</button>
+          <button onClick={this._handleNextSong}>Next</button>
+        </div>
 
-        <Search
-          onSelect={this._handleSongSelect}
-        />
-
-        <button onClick={this._handleNextSong}>Next</button>
-
-        <Settings
-          settings={this.state.settings}
-          onChange={this._handleSettingsChange}
-        />
-
-        <Audio
-          ref="song"
-          src={{
-            vocal: song.counterparts.vocalMP3.url,
-            instrumental: song.counterparts.instrumentalMP3.url
-          }}
-          vocals={this.state.settings.vocals}
-          autoPlay={this.state.settings.autoPlay}
-          onEnd={this._handleSongEnd}
-        />
-
-        {song.scriptures.length > 0 && (
-          <ul>
-            {song.scriptures.map(function (scripture, key) {
-              var href = scriptureUri.toHref(scripture.uri);
-              var text = scriptureUri.toRef(scripture.uri);
-              return (
-                <li key={key}>
-                  <a href={href} target="_blank">{text}</a>
-                </li>
-              );
-            }.bind(this))}
-          </ul>
-        )}
+        <div open={this.state.panel !== this.getInitialState().panel}>
+          <span onClick={this._handlePanelClose}>Close</span>
+          {this.state.panel === 'search' && (
+            <Search onSelect={this._handleSongSelect} />
+          )}
+          {this.state.panel === 'settings' && (
+            <Settings
+              settings={this.state.settings}
+              onChange={this._handleSettingsChange}
+            />
+          )}
+          {this.state.panel === 'scriptures' && (
+            <ul>
+              {song.scriptures.map(function (scripture, key) {
+                var href = scriptureUri.toHref(scripture.uri);
+                var text = scriptureUri.toRef(scripture.uri);
+                return (
+                  <li key={key}>
+                    <a href={href} target="_blank">{text}</a>
+                  </li>
+                );
+              }.bind(this))}
+            </ul>
+          )}
+        </div>
 
         <iframe src={song.counterparts.singlePDF.url} />
 
+        <div>
+          <Audio
+            ref="song"
+            src={{
+              vocal: song.counterparts.vocalMP3.url,
+              instrumental: song.counterparts.instrumentalMP3.url
+            }}
+            vocals={this.state.settings.vocals}
+            autoPlay={this.state.settings.autoPlay}
+            onEnd={this._handleSongEnd}
+          />
+        </div>
       </div>
     );
+  },
+  _handleOpenPanel: function (which) {
+    this.setState({panel: which});
+  },
+  _handlePanelClose: function () {
+    this.setState({panel: this.getInitialState().panel});
   },
   _handleSettingsChange: function (settings) {
     this.setState({settings: settings});
