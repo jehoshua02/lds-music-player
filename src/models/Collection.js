@@ -1,27 +1,20 @@
-var DS = require('models/DS');
-
-var Collection = DS.defineResource({
-  name: 'collection',
-  relations: {
-    hasMany: {
-      song: {
-        localField: 'songs',
-        foreignKey: 'collectionId'
-      }
-    }
-  }
-});
+var collections = [];
 
 var data;
 
 // inject hymns
 data = require('data/Hymns-EN/269/Collection');
 data.id = 'Hymns';
-Collection.inject(data);
+collections.push(data);
 
 // inject childrens
 data = require('data/Childrens-EN/275/Collection');
 data.id = 'Childrens';
-Collection.inject(data);
+collections.push(data);
 
-module.exports = Collection;
+module.exports.get = function (id) {
+  var matches = collections.filter(function (item) {
+    return item.id === id;
+  });
+  return (matches.length === 0) ? false : matches[0];
+};
