@@ -39,6 +39,7 @@
   "dependencies": {
     "axios": "^0.5.4",
     "fuse.js": "^1.2.2",
+    "js-data": "^2.4.0",
     "random-int": "^1.0.0",
     "react": "^0.13.3"
   }

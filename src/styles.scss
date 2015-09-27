@@ -65,7 +65,6 @@ body {
     transition: all .3s;
     color: #fff;
     background: $color-secondary;
-    padding: 10px;
     box-sizing: border-box;
     &--open {
       bottom: 0;
@@ -78,14 +77,34 @@ body {
 }
 .search {
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 30px;
   &__input {
     display: block;
     box-sizing: border-box;
     padding: 5px;
     width: 100%;
+    height: 30px;
+    margin-top: -30px;
     border: 0 none;
-    border-radius: 5px;
-    box-shadow: inset 0 0 2px 0 #000;
-    font-size: 16px;
+    font-size: 14px;
+  }
+  &__results {
+    height: 100%;
+    overflow: auto;
+  }
+  &__result {
+    padding: 10px;
+    border-bottom: 1px solid $color-primary;
+    cursor: pointer;
+    .name {
+      font-size: 18px;
+      margin: 0;
+    }
+    .collection {
+      font-size: 10px;
+      margin: 0;
+    }
   }
 }

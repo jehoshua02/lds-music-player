@@ -2,7 +2,7 @@ var React = require('react');
 var Search = require('components/Search');
 var Settings = require('components/Settings');
 var Audio = require('components/Audio');
-var Songs = require('modules/Songs');
+var Songs = require('models/Song');
 var scriptureUri = require('modules/scriptureUri');
 var cx = require('modules/className');
 
@@ -14,9 +14,9 @@ var Player = React.createClass({
         vocals: true,
         continuous: false,
         autoPlay: false,
-        random: false
+        random: true
       },
-      panel: null
+      panel: 'search'
     };
   },
   render: function () {
@@ -40,10 +40,10 @@ var Player = React.createClass({
         </div>
 
         <div className="player__body">
-          <div className={[
+          <div className={cx(
             'player__panel',
             this.state.panel && 'player__panel--open'
-          ].filter(function (item) { return !!item; }).join(' ')}>
+          )}>
             {this.state.panel === 'search' && (
               <Search onSelect={this._handleSongSelect} />
             )}
