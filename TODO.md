@@ -1,14 +1,13 @@
-+ Guard against data inconsistencies
-+ Search verses
-+ Add collections
-+ Separate markup from component?
 + Ignore watch files
 + Deploy build files
 + Optimize build
++ Guard against data inconsistencies
++ Do I really need JSData?
 + Icons
 + Autohide head/foot
-+ Desktop styles
-+ Do I really need JSData?
++ Search verses
++ Add collections
++ Separate markup from component?
 
 
 # Design
