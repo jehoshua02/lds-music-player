@@ -13,29 +13,29 @@ var Settings = React.createClass({
   },
   render: function () {
     return (
-      <div>
-        <label>
+      <div className="settings">
+        <label className="panel__item">
           <input
             type="checkbox"
             checked={this.props.settings.vocals}
             onChange={this._toggle.bind(this, 'vocals')}
           /> Vocals
         </label>
-        <label>
+        <label className="panel__item">
           <input
             type="checkbox"
             checked={this.props.settings.autoPlay}
             onChange={this._toggle.bind(this, 'autoPlay')}
           /> AutoPlay
         </label>
-        <label>
+        <label className="panel__item">
           <input
             type="checkbox"
             checked={this.props.settings.continuous}
             onChange={this._toggle.bind(this, 'continuous')}
           /> Continuous
         </label>
-        <label>
+        <label className="panel__item">
           <input
             type="checkbox"
             checked={this.props.settings.random}

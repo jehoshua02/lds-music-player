@@ -25366,7 +25366,7 @@
 	        autoPlay: false,
 	        random: true
 	      },
-	      panel: 'search'
+	      panel: null
 	    };
 	  },
 	  render: function render() {
@@ -25403,26 +25403,22 @@
 	        { className: 'player__body' },
 	        React.createElement(
 	          'div',
-	          { className: cx('player__panel', this.state.panel && 'player__panel--open') },
+	          { className: cx('panel', this.state.panel && 'panel--open') },
 	          this.state.panel === 'search' && React.createElement(Search, { onSelect: this._handleSongSelect }),
 	          this.state.panel === 'settings' && React.createElement(Settings, {
 	            settings: this.state.settings,
 	            onChange: this._handleSettingsChange
 	          }),
 	          this.state.panel === 'scriptures' && React.createElement(
-	            'ul',
-	            null,
+	            'div',
+	            { className: 'scriptures' },
 	            song.scriptures.map((function (scripture, key) {
 	              var href = scriptureUri.toHref(scripture.uri);
 	              var text = scriptureUri.toRef(scripture.uri);
 	              return React.createElement(
-	                'li',
-	                { key: key },
-	                React.createElement(
-	                  'a',
-	                  { href: href, target: '_blank' },
-	                  text
-	                )
+	                'a',
+	                { className: 'panel__item', href: href, target: '_blank', key: key },
+	                text
 	              );
 	            }).bind(this))
 	          )
@@ -25531,7 +25527,7 @@
 	    var collection = Collection.get(song.collectionId);
 	    return React.createElement(
 	      'div',
-	      { className: 'search__result', onClick: this._handleSelect.bind(this, song), key: key },
+	      { className: 'search__result panel__item', onClick: this._handleSelect.bind(this, song), key: key },
 	      React.createElement(
 	        'h2',
 	        { className: 'collection' },
@@ -90280,13 +90276,13 @@
 /* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	var React = __webpack_require__(186);
 	var T = React.PropTypes;
 	
 	var Settings = React.createClass({
-	  displayName: 'Settings',
+	  displayName: "Settings",
 	
 	  propTypes: {
 	    settings: T.shape({
@@ -90299,47 +90295,47 @@
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      null,
+	      "div",
+	      { className: "settings" },
 	      React.createElement(
-	        'label',
-	        null,
-	        React.createElement('input', {
-	          type: 'checkbox',
+	        "label",
+	        { className: "panel__item" },
+	        React.createElement("input", {
+	          type: "checkbox",
 	          checked: this.props.settings.vocals,
 	          onChange: this._toggle.bind(this, 'vocals')
 	        }),
-	        ' Vocals'
+	        " Vocals"
 	      ),
 	      React.createElement(
-	        'label',
-	        null,
-	        React.createElement('input', {
-	          type: 'checkbox',
+	        "label",
+	        { className: "panel__item" },
+	        React.createElement("input", {
+	          type: "checkbox",
 	          checked: this.props.settings.autoPlay,
 	          onChange: this._toggle.bind(this, 'autoPlay')
 	        }),
-	        ' AutoPlay'
+	        " AutoPlay"
 	      ),
 	      React.createElement(
-	        'label',
-	        null,
-	        React.createElement('input', {
-	          type: 'checkbox',
+	        "label",
+	        { className: "panel__item" },
+	        React.createElement("input", {
+	          type: "checkbox",
 	          checked: this.props.settings.continuous,
 	          onChange: this._toggle.bind(this, 'continuous')
 	        }),
-	        ' Continuous'
+	        " Continuous"
 	      ),
 	      React.createElement(
-	        'label',
-	        null,
-	        React.createElement('input', {
-	          type: 'checkbox',
+	        "label",
+	        { className: "panel__item" },
+	        React.createElement("input", {
+	          type: "checkbox",
 	          checked: this.props.settings.random,
 	          onChange: this._toggle.bind(this, 'random')
 	        }),
-	        ' Random'
+	        " Random"
 	      )
 	    );
 	  },

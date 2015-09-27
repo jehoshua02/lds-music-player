@@ -1,17 +1,15 @@
-+ Refactor components to match design
-+ Filter on collection
-+ Filter on topic
++ Two Audio Tags
 + Guard against data inconsistencies
 + Search verses
 + Add collections
 + Separate markup from component?
-+ Two Audio Tags
 + Ignore watch files
 + Deploy build files
 + Optimize build
++ Do I really need JSData?
 
 
-# Design Requirements
+# Design
 
 + sheet music
 + audio controls (maybe don't use native controls?)

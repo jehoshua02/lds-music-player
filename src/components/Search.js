@@ -43,7 +43,7 @@ var Search = React.createClass({
     var song = result.item;
     var collection = Collection.get(song.collectionId);
     return (
-      <div className="search__result" onClick={this._handleSelect.bind(this, song)} key={key}>
+      <div className="search__result panel__item" onClick={this._handleSelect.bind(this, song)} key={key}>
         <h2 className="collection">{collection.shortName} {song.number}</h2>
         <h1 className="name">{song.name}</h1>
       </div>

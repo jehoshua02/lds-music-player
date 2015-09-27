@@ -16,7 +16,7 @@ var Player = React.createClass({
         autoPlay: false,
         random: true
       },
-      panel: 'search'
+      panel: null
     };
   },
   render: function () {
@@ -41,8 +41,8 @@ var Player = React.createClass({
 
         <div className="player__body">
           <div className={cx(
-            'player__panel',
-            this.state.panel && 'player__panel--open'
+            'panel',
+            this.state.panel && 'panel--open'
           )}>
             {this.state.panel === 'search' && (
               <Search onSelect={this._handleSongSelect} />
@@ -54,17 +54,15 @@ var Player = React.createClass({
               />
             )}
             {this.state.panel === 'scriptures' && (
-              <ul>
+              <div className="scriptures">
                 {song.scriptures.map(function (scripture, key) {
                   var href = scriptureUri.toHref(scripture.uri);
                   var text = scriptureUri.toRef(scripture.uri);
                   return (
-                    <li key={key}>
-                      <a href={href} target="_blank">{text}</a>
-                    </li>
+                    <a className="panel__item" href={href} target="_blank" key={key}>{text}</a>
                   );
                 }.bind(this))}
-              </ul>
+              </div>
             )}
           </div>
 
