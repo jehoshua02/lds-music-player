@@ -5,3 +5,66 @@ body {
   height: 100%;
   width: 100%;
 }
+
+.player {
+  @extend .fill-parent;
+  position: relative;
+  padding: 30px 0;
+  box-sizing: border-box;
+  &__head {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    box-shadow: inset 0 0 10px 0 #000;
+  }
+  &__head-item {
+    height: 100%;
+    width: 25%;
+    border: 0 none;
+    color: #fff;
+    cursor: pointer;
+    background: #3c4d71;
+  }
+  &__body {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  }
+  &__foot {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: #3c4d71;
+    audio {
+      display: block;
+      width: 100%;
+      &::-webkit-media-controls-panel {
+        background: transparent;
+      }
+    }
+  }
+  &__panel {
+    @extend .fill-parent;
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    bottom: 100%;
+    transition: all .3s;
+    color: #fff;
+    background: #3c4d71;
+    box-shadow: inset 0 0 10px 0 #000;
+    &--open {
+      bottom: 0;
+    }
+  }
+  &__sheet-music {
+    @extend .fill-parent;
+    border: 0 none;
+  }
+}

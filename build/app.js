@@ -25372,42 +25372,39 @@
 	    var song = this.state.song;
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'player' },
 	      React.createElement(
 	        'div',
-	        null,
+	        { className: 'player__head' },
 	        React.createElement(
 	          'button',
-	          { onClick: this._handleOpenPanel.bind(this, 'search') },
+	          { className: 'player__head-item', onClick: this._handlePanelToggle.bind(this, 'search') },
 	          'Search'
 	        ),
 	        React.createElement(
 	          'button',
-	          { onClick: this._handleOpenPanel.bind(this, 'settings') },
+	          { className: 'player__head-item', onClick: this._handlePanelToggle.bind(this, 'settings') },
 	          'Settings'
 	        ),
 	        React.createElement(
 	          'button',
-	          { onClick: this._handleOpenPanel.bind(this, 'scriptures') },
+	          { className: 'player__head-item', onClick: this._handlePanelToggle.bind(this, 'scriptures') },
 	          'Scriptures'
 	        ),
 	        React.createElement(
 	          'button',
-	          { onClick: this._handleNextSong },
+	          { className: 'player__head-item', onClick: this._handleNextSong },
 	          'Next'
 	        )
 	      ),
 	      React.createElement(
 	        'div',
-	        null,
+	        { className: 'player__body' },
 	        React.createElement(
 	          'div',
-	          { open: this.state.panel !== this.getInitialState().panel },
-	          React.createElement(
-	            'span',
-	            { onClick: this._handlePanelClose },
-	            'Close'
-	          ),
+	          { className: ['player__panel', this.state.panel && 'player__panel--open'].filter(function (item) {
+	              return !!item;
+	            }).join(' ') },
 	          this.state.panel === 'search' && React.createElement(Search, { onSelect: this._handleSongSelect }),
 	          this.state.panel === 'settings' && React.createElement(Settings, {
 	            settings: this.state.settings,
@@ -25431,11 +25428,11 @@
 	            }).bind(this))
 	          )
 	        ),
-	        React.createElement('iframe', { src: song.counterparts.singlePDF.url })
+	        React.createElement('iframe', { className: 'player__sheet-music', src: song.counterparts.singlePDF.url })
 	      ),
 	      React.createElement(
 	        'div',
-	        null,
+	        { className: 'player__foot' },
 	        React.createElement(Audio, {
 	          src: {
 	            vocal: song.counterparts.vocalMP3.url,
@@ -25448,11 +25445,14 @@
 	      )
 	    );
 	  },
-	  _handleOpenPanel: function _handleOpenPanel(which) {
+	  _handlePanelToggle: function _handlePanelToggle(which) {
+	    if (this.state.panel === which) {
+	      which = null;
+	    }
 	    this.setState({ panel: which });
 	  },
 	  _handlePanelClose: function _handlePanelClose() {
-	    this.setState({ panel: this.getInitialState().panel });
+	    this.setState({ panel: null });
 	  },
 	  _handleSettingsChange: function _handleSettingsChange(settings) {
 	    this.setState({ settings: settings });
@@ -25466,6 +25466,7 @@
 	    }
 	  },
 	  _handleNextSong: function _handleNextSong() {
+	    this._handlePanelClose();
 	    if (this.state.settings.random) {
 	      this.setState({ song: Songs.random() });
 	    } else {
@@ -25503,9 +25504,6 @@
 	        onSelect: this._handleSearchSelect
 	      })
 	    );
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this.props.onSelect(Songs.random());
 	  },
 	  _searchSongs: function _searchSongs(value) {
 	    return Songs.search(value).filter(function (result) {

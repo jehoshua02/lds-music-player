@@ -1,8 +1,58 @@
 body {
   margin: 0; }
 
-.fill-parent {
+.fill-parent, .player, .player__panel, .player__sheet-music {
   height: 100%;
   width: 100%; }
+
+.player {
+  position: relative;
+  padding: 30px 0;
+  box-sizing: border-box; }
+  .player__head {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    box-shadow: inset 0 0 10px 0 #000; }
+  .player__head-item {
+    height: 100%;
+    width: 25%;
+    border: 0 none;
+    color: #fff;
+    cursor: pointer;
+    background: #3c4d71; }
+  .player__body {
+    height: 100%;
+    width: 100%;
+    position: relative; }
+  .player__foot {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: #3c4d71; }
+    .player__foot audio {
+      display: block;
+      width: 100%; }
+      .player__foot audio::-webkit-media-controls-panel {
+        background: transparent; }
+  .player__panel {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    bottom: 100%;
+    transition: all 0.3s;
+    color: #fff;
+    background: #3c4d71;
+    box-shadow: inset 0 0 10px 0 #000; }
+    .player__panel--open {
+      bottom: 0; }
+  .player__sheet-music {
+    border: 0 none; }
 
 /*# sourceMappingURL=styles.css.map*/

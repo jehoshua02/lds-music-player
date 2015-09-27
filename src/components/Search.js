@@ -18,9 +18,6 @@ var Search = React.createClass({
       </span>
     );
   },
-  componentDidMount: function () {
-    this.props.onSelect(Songs.random());
-  },
   _searchSongs: function (value) {
     return Songs.search(value).filter(function (result) {
       return result.score < 0.5;
