@@ -6,6 +6,7 @@
 + Ignore watch files
 + Deploy build files
 + Optimize build
++ Icons
 + Do I really need JSData?
 
 
