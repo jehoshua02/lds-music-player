@@ -1,4 +1,3 @@
-+ Two Audio Tags
 + Guard against data inconsistencies
 + Search verses
 + Add collections
@@ -7,6 +6,8 @@
 + Deploy build files
 + Optimize build
 + Icons
++ Autohide head/foot
++ Desktop styles
 + Do I really need JSData?
 
 
