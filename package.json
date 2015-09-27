@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "init": "npm install",
-    "build": "npm run init; webpack",
-    "watch": "npm run init; webpack -w",
-    "deploy": "npm run build; gh-pages -d ./build"
+    "watch": "npm run init; webpack -w --config webpack.watch.js",
+    "build": "npm run init; webpack -p",
+    "clean": "rm -fr ./watch ./build ./node_modules",
+    "deploy": "npm run clean; npm run build; gh-pages -d ./build"
   },
   "author": "Joshua Stoutenburg <jehoshua02@gmail.com>",
   "license": "ISC",
