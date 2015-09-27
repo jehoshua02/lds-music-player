@@ -25352,6 +25352,7 @@
 	var Audio = __webpack_require__(350);
 	var Songs = __webpack_require__(344);
 	var scriptureUri = __webpack_require__(351);
+	var cx = __webpack_require__(353);
 	
 	var Player = React.createClass({
 	  displayName: 'Player',
@@ -25378,17 +25379,17 @@
 	        { className: 'player__head' },
 	        React.createElement(
 	          'button',
-	          { className: 'player__head-item', onClick: this._handlePanelToggle.bind(this, 'search') },
+	          { className: cx('player__head-item', this.state.panel === 'search' && 'player__head-item--active'), onClick: this._handlePanelToggle.bind(this, 'search') },
 	          'Search'
 	        ),
 	        React.createElement(
 	          'button',
-	          { className: 'player__head-item', onClick: this._handlePanelToggle.bind(this, 'settings') },
+	          { className: cx('player__head-item', this.state.panel === 'settings' && 'player__head-item--active'), onClick: this._handlePanelToggle.bind(this, 'settings') },
 	          'Settings'
 	        ),
 	        React.createElement(
 	          'button',
-	          { className: 'player__head-item', onClick: this._handlePanelToggle.bind(this, 'scriptures') },
+	          { className: cx('player__head-item', this.state.panel === 'scriptures' && 'player__head-item--active'), onClick: this._handlePanelToggle.bind(this, 'scriptures') },
 	          'Scriptures'
 	        ),
 	        React.createElement(
@@ -25458,6 +25459,7 @@
 	    this.setState({ settings: settings });
 	  },
 	  _handleSongSelect: function _handleSongSelect(song) {
+	    this._handlePanelClose();
 	    this.setState({ song: song });
 	  },
 	  _handleSongEnd: function _handleSongEnd() {
@@ -25495,15 +25497,12 @@
 	    onSelect: T.func.isRequired
 	  },
 	  render: function render() {
-	    return React.createElement(
-	      'span',
-	      null,
-	      React.createElement(SearchSelect, {
-	        search: this._searchSongs,
-	        renderResult: this._renderSearchResult,
-	        onSelect: this._handleSearchSelect
-	      })
-	    );
+	    return React.createElement(SearchSelect, {
+	      focus: true,
+	      search: this._searchSongs,
+	      renderResult: this._renderSearchResult,
+	      onSelect: this._handleSearchSelect
+	    });
 	  },
 	  _searchSongs: function _searchSongs(value) {
 	    return Songs.search(value).filter(function (result) {
@@ -25546,7 +25545,13 @@
 	  propTypes: {
 	    search: T.func.isRequired,
 	    renderResult: T.func.isRequired,
-	    onSelect: T.func.isRequired
+	    onSelect: T.func.isRequired,
+	    focus: T.bool
+	  },
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      focus: false
+	    };
 	  },
 	  getInitialState: function getInitialState() {
 	    return {
@@ -25556,20 +25561,23 @@
 	  render: function render() {
 	    var results = this.props.search(this.state.value);
 	    return React.createElement(
-	      'span',
-	      null,
+	      'div',
+	      { className: 'search' },
 	      React.createElement('input', {
+	        className: 'search__input',
+	        ref: 'input',
 	        type: 'text',
 	        placeholder: 'Search',
 	        onChange: this._handleChange
 	      }),
 	      results.length > 0 && React.createElement(
 	        'ul',
-	        null,
+	        { className: 'search__results' },
 	        results.map((function (result, key) {
 	          return React.createElement(
 	            'li',
 	            {
+	              className: 'search__result',
 	              key: key,
 	              onClick: this._handleSelect.bind(this, result)
 	            },
@@ -25579,12 +25587,23 @@
 	      )
 	    );
 	  },
+	  componentDidMount: function componentDidMount() {
+	    this._applyFocus();
+	  },
+	  componentDidUpdate: function componentDidUpdate(prevProps) {
+	    this._applyFocus();
+	  },
 	  _handleChange: function _handleChange(e) {
 	    this.setState({ value: e.target.value });
 	  },
 	  _handleSelect: function _handleSelect(result) {
 	    this.setState(this.getInitialState());
 	    this.props.onSelect(result);
+	  },
+	  _applyFocus: function _applyFocus() {
+	    if (this.props.focus) {
+	      this.refs.input.getDOMNode().focus();
+	    }
 	  }
 	});
 	
@@ -90528,6 +90547,19 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 353 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = function () /* className[, className, [...]]*/{
+	  var classNames = Array.slice(arguments);
+	  return classNames.filter(function (className) {
+	    return !!className;
+	  }).join(' ');
+	};
 
 /***/ }
 /******/ ]);

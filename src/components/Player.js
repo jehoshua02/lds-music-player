@@ -4,6 +4,7 @@ var Settings = require('components/Settings');
 var Audio = require('components/Audio');
 var Songs = require('modules/Songs');
 var scriptureUri = require('modules/scriptureUri');
+var cx = require('modules/className');
 
 var Player = React.createClass({
   getInitialState: function () {
@@ -23,9 +24,18 @@ var Player = React.createClass({
     return (
       <div className="player">
         <div className="player__head">
-          <button className="player__head-item" onClick={this._handlePanelToggle.bind(this, 'search')}>Search</button>
-          <button className="player__head-item" onClick={this._handlePanelToggle.bind(this, 'settings')}>Settings</button>
-          <button className="player__head-item" onClick={this._handlePanelToggle.bind(this, 'scriptures')}>Scriptures</button>
+          <button className={cx(
+            'player__head-item',
+            this.state.panel === 'search' && 'player__head-item--active'
+          )} onClick={this._handlePanelToggle.bind(this, 'search')}>Search</button>
+          <button className={cx(
+            'player__head-item',
+            this.state.panel === 'settings' && 'player__head-item--active'
+          )} onClick={this._handlePanelToggle.bind(this, 'settings')}>Settings</button>
+          <button className={cx(
+            'player__head-item',
+            this.state.panel === 'scriptures' && 'player__head-item--active'
+          )} onClick={this._handlePanelToggle.bind(this, 'scriptures')}>Scriptures</button>
           <button className="player__head-item" onClick={this._handleNextSong}>Next</button>
         </div>
 
@@ -76,9 +86,7 @@ var Player = React.createClass({
     );
   },
   _handlePanelToggle: function (which) {
-    if (this.state.panel === which) {
-      which = null;
-    }
+    if (this.state.panel === which) { which = null; }
     this.setState({panel: which});
   },
   _handlePanelClose: function () {
@@ -88,6 +96,7 @@ var Player = React.createClass({
     this.setState({settings: settings});
   },
   _handleSongSelect: function (song) {
+    this._handlePanelClose();
     this.setState({song: song});
   },
   _handleSongEnd: function () {

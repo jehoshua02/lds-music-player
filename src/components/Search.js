@@ -9,13 +9,12 @@ var Search = React.createClass({
   },
   render: function () {
     return (
-      <span>
-        <SearchSelect
-          search={this._searchSongs}
-          renderResult={this._renderSearchResult}
-          onSelect={this._handleSearchSelect}
-        />
-      </span>
+      <SearchSelect
+        focus={true}
+        search={this._searchSongs}
+        renderResult={this._renderSearchResult}
+        onSelect={this._handleSearchSelect}
+      />
     );
   },
   _searchSongs: function (value) {
