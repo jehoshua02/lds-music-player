@@ -1,3 +1,4 @@
++ Mobile QA (meta tags, styles, ect)
 + Guard against data inconsistencies
 + Icons
 + Autohide head/foot
