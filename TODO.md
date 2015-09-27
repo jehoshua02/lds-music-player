@@ -1,10 +1,8 @@
 + Guard against data inconsistencies
-+ Do I really need JSData?
 + Icons
 + Autohide head/foot
 + Search verses
 + Add collections
-+ Separate markup from component?
 
 
 # Design
