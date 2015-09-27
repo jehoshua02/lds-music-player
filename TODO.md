@@ -1,8 +1,5 @@
-+ Ignore watch files
-+ Deploy build files
 + Optimize build
 + Guard against data inconsistencies
-+ Do I really need JSData?
 + Icons
 + Autohide head/foot
 + Search verses
