@@ -1,6 +1,6 @@
 + urls for songs
 + singlePdf error
-+ Cannot read property 'url' of undefined, Childrens-EN-289
++ Cannot read property 'url' of undefined, Childrens-EN-289, Player.js:73, `vocal: song.counterparts.vocalMP3.url`
 + Mobile
   + Icons
   + Custom audio controls
