@@ -1,4 +1,3 @@
-+ Split scriptures that contain `\r\n`
 + Icons
 + Custom audio controls
 + singlePdf error
