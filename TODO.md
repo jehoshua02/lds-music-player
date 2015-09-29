@@ -1,3 +1,4 @@
++ Models with computed properties (Collection, Song, Scripture)
 + urls for songs
 + singlePdf error
 + Cannot read property 'url' of undefined, Childrens-EN-289, Player.js:73, `vocal: song.counterparts.vocalMP3.url`
