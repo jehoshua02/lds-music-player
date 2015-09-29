@@ -1,11 +1,12 @@
++ urls for songs
 + singlePdf error
++ Cannot read property 'url' of undefined, Childrens-EN-289
 + Mobile
   + Icons
   + Custom audio controls
   + iframe not scrollable or scalable in mobile
   + window is janky on mobile
 + Arrow keys in search
-+ urls for songs
 + Autohide head/foot
 + Search verses
 + Add collections
