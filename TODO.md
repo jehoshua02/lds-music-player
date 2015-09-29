@@ -1,9 +1,9 @@
-+ Icons
-+ Custom audio controls
 + singlePdf error
-+ iframe not scrollable or scalable in mobile
-+ window is janky on mobile
-+ Mobile QA (meta tags, styles, ect)
++ Mobile
+  + Icons
+  + Custom audio controls
+  + iframe not scrollable or scalable in mobile
+  + window is janky on mobile
 + Arrow keys in search
 + urls for songs
 + Autohide head/foot
