@@ -1,20 +1,20 @@
-function parseUri(uri) {
-  var parts = uri.split('/');
-  return {
-    work: parts[2].toUpperCase(),
-    book: parts[3],
-    verse: parts[4]
-  };
+function parseBook(uri) {
+  return uri.match(/^\/scriptures\/.*?\/(.*?)\//)[1].toUpperCase();
+}
+
+function parseVerses(uri) {
+  return uri.match(/\/([^\/]+)$/)[1];
+}
+
+function parseStartVerse(uri) {
+  return uri.match(/\d+(?:\.(\d+))?[^\/]*?$/)[1] || 1;
 }
 
 module.exports.toRef = function (uri) {
-  var parts = parseUri(uri);
-  return parts.book.toUpperCase() + ' ' + parts.verse.replace('.', ':');
+  return parseBook(uri) + ' ' + parseVerses(uri).replace('.', ':');
 };
 
 module.exports.toHref = function (uri) {
-  var parts = parseUri(uri);
-  var start = parseInt(parts.verse.match(/^\d+\.(\d+).*$/)[1]);
-  var hash = '#' + (start - 1);
-  return '//lds.org' + uri + hash;
+  var hash = '#' + (parseStartVerse(uri) - 1);
+  return '//lds.org' + uri.replace(/\([\d,-]+\)/, '') + hash;
 };

@@ -56,10 +56,8 @@ var Player = React.createClass({
             {this.state.panel === 'scriptures' && (
               <div className="scriptures">
                 {song.scriptures.map(function (scripture, key) {
-                  var href = scriptureUri.toHref(scripture.uri);
-                  var text = scriptureUri.toRef(scripture.uri);
                   return (
-                    <a className="panel__item" href={href} target="_blank" key={key}>{text}</a>
+                    <a className="panel__item" href={scripture.href} target="_blank" key={key}>{scripture.ref}</a>
                   );
                 }.bind(this))}
               </div>

@@ -1,16 +1,35 @@
+var scriptureUri = require('modules/scriptureUri');
+
 var songs = [];
 
-// inject hymns
-require('data/Hymns-EN/269/Collection').items.forEach(function (song) {
-  song.collectionId = 'Hymns';
-  songs.push(song);
-});
+function fixCollectionId(song) {
+  song.collectionId = song.id.split('-')[0];
+}
 
-// inject childrens
-require('data/Childrens-EN/275/Collection').items.forEach(function (song) {
-  song.collectionId = 'Hymns';
+function fixScriptures(song) {
+  var scriptures = [];
+  song.scriptures.forEach(function (scripture) {
+    scripture.uri.split(/\r\n/).forEach(function (uri) {
+      scripture = {
+        uri: uri,
+        ref: scriptureUri.toRef(uri),
+        href: scriptureUri.toHref(uri)
+      };
+      scriptures.push(scripture);
+    });
+  });
+  song.scriptures = scriptures;
+}
+
+function inject(song) {
+  fixCollectionId(song);
+  fixScriptures(song);
   songs.push(song);
-});
+}
+
+// inject songs
+require('data/Hymns-EN/269/Collection').items.forEach(inject);
+require('data/Childrens-EN/275/Collection').items.forEach(inject);
 
 // search
 var Fuse = require('fuse.js');
