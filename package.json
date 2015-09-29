@@ -6,7 +6,7 @@
   "scripts": {
     "init": "npm install",
     "watch": "npm run init; webpack -w --config webpack.watch.js",
-    "build": "npm run init; webpack -p",
+    "build": "npm run init; webpack -p --config webpack.build.js",
     "clean": "rm -fr ./watch ./build ./node_modules",
     "deploy": "npm run clean; npm run build; gh-pages -d ./build"
   },

@@ -1,7 +1,6 @@
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var WebpackNotifierPlugin = require('webpack-notifier');
-var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -32,11 +31,6 @@ module.exports = {
     }),
     new WebpackNotifierPlugin({
       alwaysNotify: true
-    }),
-    new BrowserSyncPlugin({
-      host: 'localhost',
-      port: 3000,
-      server: {baseDir: ['build']}
     }),
     new ExtractTextPlugin('styles.css', { allChunks: true })
   ]
