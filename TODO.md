@@ -1,6 +1,12 @@
-+ Mobile QA (meta tags, styles, ect)
-+ Guard against data inconsistencies
++ Split scriptures that contain `\r\n`
 + Icons
++ Custom audio controls
++ singlePdf error
++ iframe not scrollable or scalable in mobile
++ window is janky on mobile
++ Mobile QA (meta tags, styles, ect)
++ Arrow keys in search
++ urls for songs
 + Autohide head/foot
 + Search verses
 + Add collections
