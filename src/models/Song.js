@@ -16,7 +16,9 @@ class Song {
     return this._data.number;
   }
   get scriptures() {
-    return this._data.scriptures;
+    return this._data.scriptures.map(function (data) {
+      return new Scripture(data);
+    });
   }
   get pdf() {
     return this._data.counterparts.singlePDF.url;
@@ -64,7 +66,7 @@ class SongMapper {
     var scriptures = [];
     prevScriptures.forEach(function (scripture) {
       scripture.uri.split(/\r\n/).forEach(function (uri) {
-        scriptures.push(new Scripture({uri: uri}));
+        scriptures.push({uri: uri});
       });
     });
     return scriptures;
