@@ -11,7 +11,7 @@ glob('./src/**/*.test.js').forEach(function (file) {
 config.devtool = null;
 config.entry = entries;
 config.output = {
-  path: path.resolve(__dirname, 'test'),
+  path: path.resolve(__dirname, './test'),
   filename: '[name].test.js'
 };
 
