@@ -64,14 +64,14 @@ var Player = React.createClass({
             )}
           </div>
 
-          <iframe className="player__sheet-music" src={song.counterparts.singlePDF.url} />
+          <iframe className="player__sheet-music" src={song.pdf} />
         </div>
 
         <div className="player__foot">
           <Audio
             src={{
-              vocal: song.counterparts.vocalMP3.url,
-              instrumental: song.counterparts.instrumentalMP3.url
+              vocal: song.vocalMP3,
+              instrumental: song.instrumentalMP3
             }}
             vocals={this.state.settings.vocals}
             autoPlay={this.state.settings.autoPlay}
