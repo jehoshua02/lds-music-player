@@ -26,8 +26,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'LDS Music Player',
-      template: 'src/index.html',
-      favicon: 'extension/icon.png'
+      template: './src/index.html',
+      favicon: './src/icon.png'
     }),
     new WebpackNotifierPlugin({
       alwaysNotify: true
