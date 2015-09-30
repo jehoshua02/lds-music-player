@@ -6,7 +6,7 @@
   "scripts": {
     "init": "npm install",
     "watch": "npm run init; webpack -w --config webpack.watch.js",
-    "test": "mocha --opts ./mocha.opts --require should ./src/**/*.test.js",
+    "test": "webpack --config webpack.test.js; mocha --opts ./mocha.opts --require should ./test/**/*.test.js",
     "build": "npm run init; webpack -p --config webpack.build.js",
     "clean": "rm -fr ./watch ./build ./node_modules",
     "deploy": "npm run clean; npm run build; gh-pages -d ./build"
@@ -30,6 +30,7 @@
     "css-loader": "^0.19.0",
     "extract-text-webpack-plugin": "^0.8.2",
     "gh-pages": "^0.4.0",
+    "glob": "^5.0.15",
     "html-webpack-plugin": "^1.6.1",
     "json-loader": "^0.5.3",
     "mocha": "^2.3.3",

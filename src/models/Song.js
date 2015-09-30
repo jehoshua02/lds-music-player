@@ -1,6 +1,6 @@
-var scriptureUri = require('modules/scriptureUri');
 var Fuse = require('fuse.js');
 var randomInt = require('random-int');
+var Scripture = require('./Scripture');
 
 class Song {
   constructor(data) {
@@ -64,12 +64,7 @@ class SongMapper {
     var scriptures = [];
     prevScriptures.forEach(function (scripture) {
       scripture.uri.split(/\r\n/).forEach(function (uri) {
-        scripture = {
-          uri: uri,
-          ref: scriptureUri.toRef(uri),
-          href: scriptureUri.toHref(uri)
-        };
-        scriptures.push(scripture);
+        scriptures.push(new Scripture({uri: uri}));
       });
     });
     return scriptures;

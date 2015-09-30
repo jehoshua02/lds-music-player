@@ -3,7 +3,6 @@ var Search = require('components/Search');
 var Settings = require('components/Settings');
 var Audio = require('components/Audio');
 var Songs = require('models/Song');
-var scriptureUri = require('modules/scriptureUri');
 var cx = require('modules/className');
 
 var Player = React.createClass({

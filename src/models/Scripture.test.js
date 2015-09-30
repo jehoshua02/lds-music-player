@@ -1,4 +1,4 @@
-var scriptureUri = require('./scriptureUri');
+var Scripture = require('./Scripture');
 
 var scenarios = [
   {
@@ -63,11 +63,12 @@ var scenarios = [
   }
 ];
 
-describe('scirptureUri', function () {
+describe('Scripture', function () {
   it('should generate ref and href from uri', function () {
     scenarios.forEach(function (scenario) {
-      scriptureUri.toHref(scenario.uri).should.equal(scenario.href);
-      scriptureUri.toRef(scenario.uri).should.equal(scenario.ref);
+      var scripture = new Scripture({uri: scenario.uri});
+      scripture.href.should.equal(scenario.href);
+      scripture.ref.should.equal(scenario.ref);
     });
   });
 });
