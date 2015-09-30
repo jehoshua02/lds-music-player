@@ -6,10 +6,10 @@
   "scripts": {
     "init": "npm install",
     "watch": "npm run init; webpack -w --config ./webpack.watch.js",
-    "test": "webpack --config ./webpack.test.js; mocha --opts ./mocha.opts --require should ./test/**/*.test.js",
+    "test": "webpack --config ./webpack.test.js; mocha --opts ./mocha.opts --require should ./tmp/test/**/*.test.js",
     "build": "npm run init; webpack -p --config ./webpack.build.js",
-    "clean": "rm -fr ./watch ./build ./test ./node_modules",
-    "deploy": "npm run build; gh-pages -d ./build"
+    "clean": "rm -fr ./tmp ./node_modules",
+    "deploy": "npm run build; gh-pages -d ./tmp/build"
   },
   "author": "Joshua Stoutenburg <jehoshua02@gmail.com>",
   "license": "ISC",

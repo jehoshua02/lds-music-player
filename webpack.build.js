@@ -10,7 +10,7 @@ module.exports = {
     path.resolve(__dirname, './src/styles.scss')
   ],
   output: {
-    path: path.resolve(__dirname, './build'),
+    path: path.resolve(__dirname, './tmp/build'),
     filename: 'app.js'
   },
   module: {
