@@ -1,7 +1,10 @@
 require("babel/polyfill");
 var React = require('react');
-var Player = require('./components/Player');
+var {Router, Route} = require('react-router');
+var Player = require('components/Player');
 
-document.addEventListener('DOMContentLoaded', function() {
-  React.render(<Player />, document.getElementById('app'));
-});
+React.render((
+  <Router>
+    <Route path="/" component={Player} />
+  </Router>
+), document.getElementById('app'));

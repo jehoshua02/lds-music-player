@@ -44,6 +44,7 @@
   "dependencies": {
     "fuse.js": "^1.2.2",
     "random-int": "^1.0.0",
-    "react": "^0.13.3"
+    "react": "^0.13.3",
+    "react-router": "^0.13.3"
   }
 }
