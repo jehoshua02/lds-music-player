@@ -4,7 +4,7 @@ class Scripture {
   }
   get ref() {
     var uri = this._data.uri;
-    return this._parseBook(uri) + ' ' + this._parseVerses(uri).replace('.', ':');
+    return this._parseBook(uri).replace('-', ' ') + ' ' + this._parseVerses(uri).replace('.', ':');
   }
   get href() {
     var uri = this._data.uri;
