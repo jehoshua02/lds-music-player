@@ -1,14 +1,20 @@
 var React = require('react');
+var T = React.PropTypes;
 var Search = require('components/Search');
 var Settings = require('components/Settings');
 var Audio = require('components/Audio');
-var Songs = require('models/Song');
+var Song = require('models/Song');
 var cx = require('modules/className');
 
 var Player = React.createClass({
+  propTypes: {
+    params: T.shape({
+      id: T.string.isRequired
+    }).isRequired
+  },
   getInitialState: function () {
     return {
-      song: Songs.random(),
+      song: Song.get(this.props.params.id),
       settings: {
         vocals: true,
         continuous: false,
@@ -102,9 +108,9 @@ var Player = React.createClass({
   _handleNextSong: function () {
     this._handlePanelClose();
     if (this.state.settings.random) {
-      this.setState({song: Songs.random()});
+      this.setState({song: Song.random()});
     } else {
-      this.setState({song: Songs.next(this.state.song)});
+      this.setState({song: Song.next(this.state.song)});
     }
   }
 });

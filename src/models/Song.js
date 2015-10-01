@@ -59,6 +59,12 @@ class SongMapper {
     var data = this._songs[index];
     return this._initModel(data);
   }
+  get(id) {
+    var matches = this._songs.filter(function (song) {
+      return song.id.toLowerCase() === id.toLowerCase();
+    });
+    return matches.length > 0 ? new Song(matches[0]) : false;
+  }
   _inject(data) {
     this._songs.push(data);
   }
@@ -85,3 +91,4 @@ require('data/Childrens-EN/275/Collection').items.forEach(mapper._inject.bind(ma
 module.exports.search = mapper.search.bind(mapper);
 module.exports.random = mapper.random.bind(mapper);
 module.exports.next = mapper.next.bind(mapper);
+module.exports.get = mapper.get.bind(mapper);
