@@ -10,6 +10,7 @@
 + Search verses
 + Add collections
 + es6 module syntax
++ a11y
 
 
 # Design
