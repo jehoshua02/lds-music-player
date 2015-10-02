@@ -1,14 +1,21 @@
 var React = require('react');
+var T = React.PropTypes;
 var Search = require('components/Search');
 var Settings = require('components/Settings');
 var Audio = require('components/Audio');
-var Songs = require('models/Song');
+var Song = require('models/Song');
 var cx = require('modules/className');
+var history = require('modules/history');
 
 var Player = React.createClass({
+  propTypes: {
+    params: T.shape({
+      id: T.string.isRequired
+    }).isRequired
+  },
   getInitialState: function () {
     return {
-      song: Songs.random(),
+      song: null,
       settings: {
         vocals: true,
         continuous: false,
@@ -19,7 +26,6 @@ var Player = React.createClass({
     };
   },
   render: function () {
-    var song = this.state.song;
     return (
       <div className="player">
         <div className="player__head">
@@ -52,9 +58,9 @@ var Player = React.createClass({
                 onChange={this._handleSettingsChange}
               />
             )}
-            {this.state.panel === 'scriptures' && (
+            {this.state.panel === 'scriptures' && this.state.song && (
               <div className="scriptures">
-                {song.scriptures.map(function (scripture, key) {
+                {this.state.song.scriptures.map(function (scripture, key) {
                   return (
                     <a className="panel__item" href={scripture.href} target="_blank" key={key}>{scripture.ref}</a>
                   );
@@ -63,22 +69,43 @@ var Player = React.createClass({
             )}
           </div>
 
-          <iframe className="player__sheet-music" src={song.pdf} />
+          {this.state.song && this.state.song.pdf ? (
+            <iframe className="player__sheet-music" src={this.state.song.pdf} />
+          ) : this.state.song && this.state.song.verses ? (
+            <div className="player__sheet-music">
+              {this.state.song.verses.map(function (verse, key) {
+                return <p key={key}>{verse.text}</p>;
+              })}
+            </div>
+          ) : <div className="player__sheet-music">No Sheet Music</div>}
         </div>
 
         <div className="player__foot">
-          <Audio
-            src={{
-              vocal: song.vocalMP3,
-              instrumental: song.instrumentalMP3
-            }}
-            vocals={this.state.settings.vocals}
-            autoPlay={this.state.settings.autoPlay}
-            onEnd={this._handleSongEnd}
-          />
+          {this.state.song && (this.state.song.vocalMP3 || this.state.song.instrumentalMP3) && (
+            <Audio
+              src={{
+                vocal: this.state.song.vocalMP3,
+                instrumental: this.state.song.instrumentalMP3
+              }}
+              vocals={this.state.settings.vocals}
+              autoPlay={this.state.settings.autoPlay}
+              onEnd={this._handleSongEnd}
+            />
+          )}
         </div>
       </div>
     );
+  },
+  componentDidMount: function () {
+    this._fetchSong();
+  },
+  componentDidUpdate: function (prevProps) {
+    if (this.props.params.id !== prevProps.params.id) {
+      this._fetchSong();
+    }
+  },
+  _fetchSong: function (id) {
+    this.setState({song: Song.get(this.props.params.id)});
   },
   _handlePanelToggle: function (which) {
     if (this.state.panel === which) { which = null; }
@@ -92,7 +119,7 @@ var Player = React.createClass({
   },
   _handleSongSelect: function (song) {
     this._handlePanelClose();
-    this.setState({song: song});
+    this._routeSong(song);
   },
   _handleSongEnd: function () {
     if (this.state.settings.continuous === true) {
@@ -101,11 +128,11 @@ var Player = React.createClass({
   },
   _handleNextSong: function () {
     this._handlePanelClose();
-    if (this.state.settings.random) {
-      this.setState({song: Songs.random()});
-    } else {
-      this.setState({song: Songs.next(this.state.song)});
-    }
+    var song = (this.state.settings.random) ? Song.random() : Song.next(this.state.song);
+    this._routeSong(song);
+  },
+  _routeSong: function (song) {
+    history.replaceState(null, '/' + song.id.toLowerCase());
   }
 });
 
