@@ -3,6 +3,8 @@
   + Custom audio controls
   + iframe not scrollable or scalable in mobile
   + window is janky on mobile
++ Desktop
++ Style verses
 + Arrow keys in search
 + Autohide head/foot
 + Search verses
