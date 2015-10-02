@@ -5,6 +5,7 @@ var Settings = require('components/Settings');
 var Audio = require('components/Audio');
 var Song = require('models/Song');
 var cx = require('modules/className');
+var history = require('modules/history');
 
 var Player = React.createClass({
   propTypes: {
@@ -14,7 +15,7 @@ var Player = React.createClass({
   },
   getInitialState: function () {
     return {
-      song: Song.get(this.props.params.id),
+      song: null,
       settings: {
         vocals: true,
         continuous: false,
@@ -58,7 +59,7 @@ var Player = React.createClass({
                 onChange={this._handleSettingsChange}
               />
             )}
-            {this.state.panel === 'scriptures' && (
+            {this.state.panel === 'scriptures' && this.state.song && (
               <div className="scriptures">
                 {song.scriptures.map(function (scripture, key) {
                   return (
@@ -69,22 +70,37 @@ var Player = React.createClass({
             )}
           </div>
 
-          <iframe className="player__sheet-music" src={song.pdf} />
+          {this.state.song && (
+            <iframe className="player__sheet-music" src={song.pdf} />
+          )}
         </div>
 
         <div className="player__foot">
-          <Audio
-            src={{
-              vocal: song.vocalMP3,
-              instrumental: song.instrumentalMP3
-            }}
-            vocals={this.state.settings.vocals}
-            autoPlay={this.state.settings.autoPlay}
-            onEnd={this._handleSongEnd}
-          />
+          {this.state.song && (
+            <Audio
+              src={{
+                vocal: song.vocalMP3,
+                instrumental: song.instrumentalMP3
+              }}
+              vocals={this.state.settings.vocals}
+              autoPlay={this.state.settings.autoPlay}
+              onEnd={this._handleSongEnd}
+            />
+          )}
         </div>
       </div>
     );
+  },
+  componentDidMount: function () {
+    this._fetchSong();
+  },
+  componentDidUpdate: function (prevProps) {
+    if (this.props.params.id !== prevProps.params.id) {
+      this._fetchSong();
+    }
+  },
+  _fetchSong: function (id) {
+    this.setState({song: Song.get(this.props.params.id)});
   },
   _handlePanelToggle: function (which) {
     if (this.state.panel === which) { which = null; }
@@ -98,7 +114,7 @@ var Player = React.createClass({
   },
   _handleSongSelect: function (song) {
     this._handlePanelClose();
-    this.setState({song: song});
+    this._routeSong(song);
   },
   _handleSongEnd: function () {
     if (this.state.settings.continuous === true) {
@@ -107,11 +123,11 @@ var Player = React.createClass({
   },
   _handleNextSong: function () {
     this._handlePanelClose();
-    if (this.state.settings.random) {
-      this.setState({song: Song.random()});
-    } else {
-      this.setState({song: Song.next(this.state.song)});
-    }
+    var song = (this.state.settings.random) ? Song.random() : Song.next(this.state.song);
+    this._routeSong(song);
+  },
+  _routeSong: function (song) {
+    history.replaceState(null, '/' + song.id.toLowerCase());
   }
 });
 

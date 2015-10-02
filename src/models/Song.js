@@ -1,36 +1,47 @@
 var Fuse = require('fuse.js');
 var randomInt = require('random-int');
 var Scripture = require('./Scripture');
+var safeGet = require('modules/safeGet');
 
 class Song {
   constructor(data) {
     this._data = data;
   }
   get id() {
-    return this._data.id;
+    return safeGet(this._data, 'id');
   }
   get name() {
-    return this._data.name;
+    return safeGet(this._data, 'name');
   }
   get number() {
-    return this._data.number;
+    return safeGet(this._data, 'number');
   }
   get scriptures() {
-    return this._data.scriptures.map(function (data) {
+    return safeGet(this._data, 'scriptures', []).map(function (data) {
       return new Scripture(data);
     });
   }
   get pdf() {
-    return this._data.counterparts.singlePDF.url;
+    return safeGet(this._data, 'counterparts.singlePDF.url');
   }
   get vocalMP3() {
-    return this._data.counterparts.vocalMP3.url;
+    return safeGet(this._data, 'counterparts.vocalMP3.url');
   }
   get instrumentalMP3() {
-    return this._data.counterparts.instrumentalMP3.url;
+    return safeGet(this._data, 'counterparts.instrumentalMP3.url');
   }
   get collectionId() {
-    return this._data.collectionId;
+    return safeGet(this._data, 'collectionId');
+  }
+  get verses() {
+    return safeGet(this._data, 'verses', []);
+  }
+  _isWorthless() {
+    return (
+      !this.pdf
+      && !this.vocalMP3
+      && !this.instrumentalMP3
+    );
   }
 }
 
@@ -66,7 +77,10 @@ class SongMapper {
     return matches.length > 0 ? new Song(matches[0]) : false;
   }
   _inject(data) {
-    this._songs.push(data);
+    var song = new Song(data);
+    if (!song._isWorthless()) {
+      this._songs.push(data);
+    }
   }
   _fixScriptures(prevScriptures) {
     var scriptures = [];
