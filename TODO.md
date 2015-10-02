@@ -1,5 +1,3 @@
-+ song id in urls
-+ singlePdf error
 + Cannot read property 'url' of undefined, Childrens-EN-289, Player.js:73, `vocal: song.counterparts.vocalMP3.url`
 + Mobile
   + Icons
@@ -10,6 +8,7 @@
 + Autohide head/foot
 + Search verses
 + Add collections
++ es6 module syntax
 
 
 # Design

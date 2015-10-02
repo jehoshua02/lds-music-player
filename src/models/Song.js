@@ -36,11 +36,12 @@ class Song {
   get verses() {
     return safeGet(this._data, 'verses', []);
   }
-  _isWorthless() {
+  _isWorthSomething() {
     return (
-      !this.pdf
-      && !this.vocalMP3
-      && !this.instrumentalMP3
+      this.pdf
+      || this.verses > 0
+      || this.vocalMP3
+      || this.instrumentalMP3
     );
   }
 }
@@ -78,7 +79,7 @@ class SongMapper {
   }
   _inject(data) {
     var song = new Song(data);
-    if (!song._isWorthless()) {
+    if (song._isWorthSomething()) {
       this._songs.push(data);
     }
   }

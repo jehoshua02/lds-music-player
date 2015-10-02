@@ -26,7 +26,6 @@ var Player = React.createClass({
     };
   },
   render: function () {
-    var song = this.state.song;
     return (
       <div className="player">
         <div className="player__head">
@@ -61,7 +60,7 @@ var Player = React.createClass({
             )}
             {this.state.panel === 'scriptures' && this.state.song && (
               <div className="scriptures">
-                {song.scriptures.map(function (scripture, key) {
+                {this.state.song.scriptures.map(function (scripture, key) {
                   return (
                     <a className="panel__item" href={scripture.href} target="_blank" key={key}>{scripture.ref}</a>
                   );
@@ -70,17 +69,23 @@ var Player = React.createClass({
             )}
           </div>
 
-          {this.state.song && (
-            <iframe className="player__sheet-music" src={song.pdf} />
-          )}
+          {this.state.song && this.state.song.pdf ? (
+            <iframe className="player__sheet-music" src={this.state.song.pdf} />
+          ) : this.state.song && this.state.song.verses ? (
+            <div className="player__sheet-music">
+              {this.state.song.verses.map(function (verse, key) {
+                return <p key={key}>{verse.text}</p>;
+              })}
+            </div>
+          ) : <div className="player__sheet-music">No Sheet Music</div>}
         </div>
 
         <div className="player__foot">
-          {this.state.song && (
+          {this.state.song && (this.state.song.vocalMP3 || this.state.song.instrumentalMP3) && (
             <Audio
               src={{
-                vocal: song.vocalMP3,
-                instrumental: song.instrumentalMP3
+                vocal: this.state.song.vocalMP3,
+                instrumental: this.state.song.instrumentalMP3
               }}
               vocals={this.state.settings.vocals}
               autoPlay={this.state.settings.autoPlay}

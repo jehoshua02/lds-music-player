@@ -1,5 +1,6 @@
 $color-primary: #3c4d71;
 $color-secondary: lighten($color-primary, 5%);
+$color-dark: darken($color-primary, 5%);
 body {
   margin: 0;
 }
@@ -81,6 +82,7 @@ body {
   &__sheet-music {
     @extend .fill-parent;
     border: 0 none;
+    background: $color-dark;
   }
   .search {
     width: 100%;
