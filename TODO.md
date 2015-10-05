@@ -3,6 +3,7 @@
   + Custom audio controls
   + iframe not scrollable or scalable in mobile
   + window is janky on mobile
++ Fix routing issues (history)
 + Desktop
 + Style verses
 + Arrow keys in search
